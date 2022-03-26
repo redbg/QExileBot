@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qss/default.qss</file>
+        <file>Data/BackendErrors.json</file>
+        <file>Data/Characters.json</file>
+    </qresource>
+</RCC>
