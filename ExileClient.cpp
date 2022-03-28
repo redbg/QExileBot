@@ -28,6 +28,9 @@ void ExileClient::on_client_readyRead()
             this->RecvPublicKey();
             this->SendLogin(m_Email, m_Password);
             break;
+        case MSG_SERVER::LoginResult:
+            this->RecvLoginResult();
+            break;
         default:
             qWarning() << QString("[!] UnknownPacket PacketId:[0x%1] Data:[%2]")
                               .arg(QString::number(PacketId, 16))
@@ -94,4 +97,31 @@ void ExileClient::SendLogin(const QString &Email, const QString &Password)
     this->write<quint8>(1);                                              // ??
     this->write<quint8>(0);                                              // 1 = 是否使用记住的密码
     this->write<quint8>(0x40);                                           // ??
+}
+
+bool ExileClient::RecvLoginResult()
+{
+    qDebug() << "收到登录结果";
+
+    quint16 LoginResult = this->read<quint16>(); // LoginResult
+
+    if (LoginResult != 0)
+    {
+        quint16 BackendErrorIndex = LoginResult - 1;
+        QJsonObject BackendError = Helper::Data::GetBackendError(BackendErrorIndex);
+        QString errorString = BackendError.value("Id").toString();
+
+        this->readAll();
+        this->setErrorString(errorString);
+        emit errorOccurred(SocketError::RemoteHostClosedError);
+
+        return false;
+    }
+
+    this->readString();                 // ??
+    this->read(0x20);                   // 保存的密码
+    this->read<quint8>();               // ??
+    m_AccountName = this->readString(); // AccountName
+
+    return true;
 }

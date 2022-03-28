@@ -1,6 +1,7 @@
 #pragma once
 #include "ExileSocket.h"
 #include "Global.h"
+#include "Helper.h"
 
 #include <cryptopp/osrng.h>
 #include <cryptopp/dh.h>
@@ -56,12 +57,6 @@ public:
 
     virtual ~ExileClient() {}
 
-public slots:
-    void on_client_connected();
-    void on_client_disconnected();
-    void on_client_errorOccurred(QAbstractSocket::SocketError socketError);
-    void on_client_readyRead();
-
 public:
     void connectToLoginServer(const QString &hostName, quint16 port, const QString &Email, const QString &Password)
     {
@@ -72,9 +67,16 @@ public:
         this->connectToHost(hostName, port);
     }
 
+public slots:
+    void on_client_connected();
+    void on_client_disconnected();
+    void on_client_errorOccurred(QAbstractSocket::SocketError socketError);
+    void on_client_readyRead();
+
 public:
     void SendPublicKey();
     void RecvPublicKey();
 
     void SendLogin(const QString &Email, const QString &Password);
+    bool RecvLoginResult();
 };
