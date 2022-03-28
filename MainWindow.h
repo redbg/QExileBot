@@ -42,4 +42,5 @@ private slots:
     void on_actionInsert_triggered();
     void on_actionRemove_triggered();
     void on_actionMyAccount_triggered();
+    void on_actionStart_triggered();
 };

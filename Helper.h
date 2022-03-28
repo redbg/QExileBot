@@ -1,3 +1,4 @@
+#pragma once
 #include <QRandomGenerator>
 #include <QFile>
 #include <QJsonObject>

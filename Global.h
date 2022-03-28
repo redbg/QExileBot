@@ -3,6 +3,9 @@
 
 namespace Global
 {
+    const static QString hostName = "sjc01.login.pathofexile.com";
+    const static quint16 port = 20481;
+
     const static CryptoPP::Integer p("0xc5d1fff6e1e0b5b5a4220a369a4f504d"
                                      "59c7482724053c0d4b05426328031633"
                                      "bc79249c1c58c91b32e6802f20a1e762"

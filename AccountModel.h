@@ -32,4 +32,5 @@ public:
 public:
     QJsonValue toJson();
     void fromJson(QJsonValue JsonValue);
+    void start(const QModelIndex &index);
 };

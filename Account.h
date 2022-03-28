@@ -4,6 +4,7 @@
 #include <QJsonValue>
 #include <QJsonObject>
 #include <QMetaProperty>
+#include "ExileClient.h"
 
 class Account : public QThread
 {
@@ -19,11 +20,34 @@ public:
     QString m_AccountName;
     QString m_POESESSID;
 
+    ExileClient *m_ExileClient;
+
 public:
-    explicit Account(QObject *parent = nullptr) : QThread(parent) {}
-    virtual ~Account() {}
+    explicit Account(QObject *parent = nullptr)
+        : QThread(parent)
+    {
+    }
+
+    virtual ~Account()
+    {
+        this->quit();
+        this->wait();
+    }
 
 public:
     QJsonValue toJson();
     void fromJson(QJsonValue JsonValue);
+
+protected:
+    void run() override
+    {
+        m_ExileClient = new ExileClient(this);
+        connect(m_ExileClient, &ExileSocket::errorOccurred, this, &QThread::quit, Qt::DirectConnection);
+
+        m_ExileClient->connectToLoginServer(Global::hostName, Global::port, m_Email, m_Password);
+
+        this->exec();
+
+        delete m_ExileClient;
+    }
 };

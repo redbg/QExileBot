@@ -72,3 +72,8 @@ void MainWindow::on_actionMyAccount_triggered()
     m_WebEngineView.load(url);
     m_WebEngineView.show();
 }
+
+void MainWindow::on_actionStart_triggered()
+{
+    m_AccountModel.start(ui->AccountView->currentIndex());
+}

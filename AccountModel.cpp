@@ -104,3 +104,8 @@ void AccountModel::fromJson(QJsonValue JsonValue)
         }
     }
 }
+
+void AccountModel::start(const QModelIndex &index)
+{
+    m_AccountList.at(index.row())->start();
+}
