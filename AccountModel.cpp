@@ -20,6 +20,10 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
         const char *name = Account::staticMetaObject.property(index.column()).name();
         return m_AccountList.at(index.row())->property(name);
     }
+    case Qt::ForegroundRole:
+    {
+        return m_AccountList.at(index.row())->isRunning() ? QBrush(Qt::darkGreen) : QVariant();
+    }
     default:
         return QVariant();
     }
@@ -108,4 +112,14 @@ void AccountModel::fromJson(QJsonValue JsonValue)
 void AccountModel::start(const QModelIndex &index)
 {
     m_AccountList.at(index.row())->start();
+}
+
+void AccountModel::quit(const QModelIndex &index)
+{
+    m_AccountList.at(index.row())->quit();
+}
+
+Account *AccountModel::at(int row)
+{
+    return m_AccountList.at(row);
 }

@@ -16,6 +16,7 @@ private:
     Ui::MainWindow *ui;
     AccountModel m_AccountModel;
     QWebEngineView m_WebEngineView;
+    QTreeView m_CharacterView;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr)
@@ -25,6 +26,8 @@ public:
         ui->setupUi(this);
         this->InitAccountView();
         this->readSettings();
+
+        m_CharacterView.header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
 
     virtual ~MainWindow()
@@ -43,4 +46,6 @@ private slots:
     void on_actionRemove_triggered();
     void on_actionMyAccount_triggered();
     void on_actionStart_triggered();
+    void on_actionQuit_triggered();
+    void on_actionCharacterList_triggered();
 };

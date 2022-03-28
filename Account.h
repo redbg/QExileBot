@@ -42,7 +42,9 @@ protected:
     void run() override
     {
         m_ExileClient = new ExileClient;
-        connect(m_ExileClient, &ExileSocket::errorOccurred, this, &QThread::quit);
+        connect(m_ExileClient, &ExileClient::errorOccurred, this, &QThread::quit);
+        connect(m_ExileClient, &ExileClient::LoginSuccess, this, [=](const QString &AccountName)
+                { m_AccountName = AccountName; });
 
         // 连接登录服务器
         m_ExileClient->connectToLoginServer(Global::hostName, Global::port, m_Email, m_Password);

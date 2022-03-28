@@ -1,14 +1,23 @@
 #include "ExileClient.h"
 
+void ExileClient::connectToLoginServer(const QString &hostName, quint16 port, const QString &Email, const QString &Password)
+{
+    qDebug() << QString("连接登录服务器:[%1:%2]").arg(hostName).arg(port);
+
+    this->m_Email = Email;
+    this->m_Password = Password;
+    this->connectToHost(hostName, port);
+}
+
 void ExileClient::on_client_connected()
 {
-    // qDebug() << "on_client_connected";
+    qDebug() << "on_client_connected";
     this->SendPublicKey();
 }
 
 void ExileClient::on_client_disconnected()
 {
-    // qDebug() << "on_client_disconnected";
+    qDebug() << "on_client_disconnected";
 }
 
 void ExileClient::on_client_errorOccurred(QAbstractSocket::SocketError socketError)
@@ -30,6 +39,9 @@ void ExileClient::on_client_readyRead()
             break;
         case MSG_SERVER::LoginResult:
             this->RecvLoginResult();
+            break;
+        case MSG_SERVER::CharacterList:
+            this->RecvCharacterList();
             break;
         default:
             qWarning() << QString("[!] UnknownPacket PacketId:[0x%1] Data:[%2]")
@@ -129,5 +141,39 @@ bool ExileClient::RecvLoginResult()
 
     qDebug() << QString("登录成功! AccountName:%1").arg(m_AccountName);
 
+    emit this->LoginSuccess(m_AccountName);
+
     return true;
+}
+
+void ExileClient::RecvCharacterList()
+{
+    qDebug() << "收到角列表";
+
+    m_CharacterModel.clear();
+
+    quint32 CharacterSize = this->read<quint32>();
+
+    for (quint32 i = 0; i < CharacterSize; i++)
+    {
+        Character *character = new Character(&m_CharacterModel);
+
+        character->m_Name = this->readString();          // Name
+        character->m_League = this->readString();        // League
+        character->m_LeagueId = this->read<quint8>();    // LeagueId
+        character->m_Unknown1 = this->read<quint8>();    // ??
+        character->m_Level = this->read<quint8>();       // Level
+        character->m_Experience = this->read<quint32>(); // Experience
+        character->m_ClassId = this->read<quint8>();     // ClassId
+        character->m_Unknown2 = this->read<quint16>();   // ??
+        character->m_Unknown3 = this->read<quint8>();    // ??
+        character->m_Unknown4 = this->read<quint8>();    // ??
+
+        m_CharacterModel.append(character);
+
+        qDebug() << "[" << i << "]" << character->toJson();
+    }
+
+    m_CharacterModel.m_LastSelectIndex = this->read<quint32>(); // LastSelectIndex
+    m_CharacterModel.m_Unknown1 = this->read<quint8>();         // ??
 }

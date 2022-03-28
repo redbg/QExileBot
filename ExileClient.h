@@ -2,6 +2,7 @@
 #include "ExileSocket.h"
 #include "Global.h"
 #include "Helper.h"
+#include "CharacterModel.h"
 
 #include <cryptopp/osrng.h>
 #include <cryptopp/dh.h>
@@ -35,10 +36,12 @@ public:
     };
     Q_ENUM(MSG_SERVER)
 
-private:
+public:
     QString m_Email;
     QString m_Password;
     QString m_AccountName;
+
+    CharacterModel m_CharacterModel;
 
     CryptoPP::byte m_PrivateKey[0x80];
     CryptoPP::byte m_PublicKey[0x80];
@@ -57,16 +60,6 @@ public:
 
     virtual ~ExileClient() {}
 
-public:
-    void connectToLoginServer(const QString &hostName, quint16 port, const QString &Email, const QString &Password)
-    {
-        qDebug() << QString("连接登录服务器:[%1:%2]").arg(hostName).arg(port);
-
-        this->m_Email = Email;
-        this->m_Password = Password;
-        this->connectToHost(hostName, port);
-    }
-
 public slots:
     void on_client_connected();
     void on_client_disconnected();
@@ -74,9 +67,16 @@ public slots:
     void on_client_readyRead();
 
 public:
+    void connectToLoginServer(const QString &hostName, quint16 port, const QString &Email, const QString &Password);
+
     void SendPublicKey();
     void RecvPublicKey();
 
     void SendLogin(const QString &Email, const QString &Password);
     bool RecvLoginResult();
+
+    void RecvCharacterList();
+
+signals:
+    void LoginSuccess(const QString &AccountName);
 };

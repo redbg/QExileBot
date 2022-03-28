@@ -1,6 +1,7 @@
 #pragma once
 #include "Account.h"
 #include <QAbstractTableModel>
+#include <QBrush>
 #include <QList>
 #include <QMetaProperty>
 #include <QJsonValue>
@@ -33,4 +34,6 @@ public:
     QJsonValue toJson();
     void fromJson(QJsonValue JsonValue);
     void start(const QModelIndex &index);
+    void quit(const QModelIndex &index);
+    Account *at(int row);
 };

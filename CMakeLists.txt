@@ -27,6 +27,9 @@ add_executable(QExileBot
     AccountModel.cpp
     AccountModel.h
 
+    Character.h
+    CharacterModel.h
+
     ExileSocket.cpp
     ExileSocket.h
     

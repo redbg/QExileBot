@@ -58,7 +58,7 @@ void MainWindow::on_actionMyAccount_triggered()
 {
     QUrl url("https://www.pathofexile.com/my-account");
     QModelIndex currentIndex = ui->AccountView->currentIndex();
-    QByteArray POESESSID = m_AccountModel.data(currentIndex).toByteArray();
+    QByteArray POESESSID = m_AccountModel.at(currentIndex.row())->m_POESESSID.toLatin1();
     QNetworkCookie cookie("POESESSID", POESESSID);
 
     QWebEnginePage *page = m_WebEngineView.page();
@@ -76,4 +76,20 @@ void MainWindow::on_actionMyAccount_triggered()
 void MainWindow::on_actionStart_triggered()
 {
     m_AccountModel.start(ui->AccountView->currentIndex());
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
+    m_AccountModel.quit(ui->AccountView->currentIndex());
+}
+
+void MainWindow::on_actionCharacterList_triggered()
+{
+    Account *account = m_AccountModel.at(ui->AccountView->currentIndex().row());
+
+    if (account->isRunning())
+    {
+        m_CharacterView.setModel(&account->m_ExileClient->m_CharacterModel);
+        m_CharacterView.show();
+    }
 }
