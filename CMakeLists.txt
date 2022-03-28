@@ -11,6 +11,10 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Network)
+find_package(Qt6 REQUIRED COMPONENTS WebEngineWidgets)
+
 add_executable(QExileBot
     main.cpp
     MainWindow.cpp
@@ -30,18 +34,15 @@ add_executable(QExileBot
     ExileClient.h
 
     Global.h
+    
     Helper.h
+    Helper.cpp
+
     QExileBot.qrc
 )
 
-# Qt6::Widgets
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
 target_link_libraries(QExileBot PRIVATE Qt6::Widgets)
-# Qt6::Network
-find_package(Qt6 REQUIRED COMPONENTS Network)
 target_link_libraries(QExileBot PRIVATE Qt6::Network)
-# Qt6::WebEngineWidgets
-find_package(Qt6 REQUIRED COMPONENTS WebEngineWidgets)
 target_link_libraries(QExileBot PRIVATE Qt6::WebEngineWidgets)
 
 # vcpkg

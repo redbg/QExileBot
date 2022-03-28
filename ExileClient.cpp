@@ -2,13 +2,13 @@
 
 void ExileClient::on_client_connected()
 {
-    qDebug() << "on_client_connected";
+    // qDebug() << "on_client_connected";
     this->SendPublicKey();
 }
 
 void ExileClient::on_client_disconnected()
 {
-    qDebug() << "on_client_disconnected";
+    // qDebug() << "on_client_disconnected";
 }
 
 void ExileClient::on_client_errorOccurred(QAbstractSocket::SocketError socketError)
@@ -40,9 +40,11 @@ void ExileClient::on_client_readyRead()
     }
 }
 
+// PublicKey
+
 void ExileClient::SendPublicKey()
 {
-    qDebug() << "发送公钥";
+    // qDebug() << "发送公钥";
 
     CryptoPP::AutoSeededRandomPool rng;
     CryptoPP::DH dh(Global::p, Global::q, Global::g);
@@ -56,7 +58,7 @@ void ExileClient::SendPublicKey()
 
 void ExileClient::RecvPublicKey()
 {
-    qDebug() << "收到公钥";
+    // qDebug() << "收到公钥";
     CryptoPP::DH dh(Global::p, Global::q, Global::g);
 
     QByteArray serverPublicKey = this->read(this->read<quint16>()); // serverPublicKey
@@ -76,9 +78,11 @@ void ExileClient::RecvPublicKey()
     this->EnableCrypto();
 }
 
+// Login
+
 void ExileClient::SendLogin(const QString &Email, const QString &Password)
 {
-    qDebug() << QString("登录账号 Email:%1").arg(Email);
+    qDebug() << QString("登录 Email:%1 Password:%2").arg(Email).arg(Password);
 
     // PasswordHash
     QByteArray PasswordHash = QCryptographicHash::hash(
@@ -122,6 +126,8 @@ bool ExileClient::RecvLoginResult()
     this->read(0x20);                   // 保存的密码
     this->read<quint8>();               // ??
     m_AccountName = this->readString(); // AccountName
+
+    qDebug() << QString("登录成功! AccountName:%1").arg(m_AccountName);
 
     return true;
 }

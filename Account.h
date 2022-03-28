@@ -41,9 +41,10 @@ public:
 protected:
     void run() override
     {
-        m_ExileClient = new ExileClient(this);
-        connect(m_ExileClient, &ExileSocket::errorOccurred, this, &QThread::quit, Qt::DirectConnection);
+        m_ExileClient = new ExileClient;
+        connect(m_ExileClient, &ExileSocket::errorOccurred, this, &QThread::quit);
 
+        // 连接登录服务器
         m_ExileClient->connectToLoginServer(Global::hostName, Global::port, m_Email, m_Password);
 
         this->exec();

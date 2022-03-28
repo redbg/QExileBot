@@ -60,7 +60,7 @@ public:
 public:
     void connectToLoginServer(const QString &hostName, quint16 port, const QString &Email, const QString &Password)
     {
-        qDebug() << "连接到登录服务器...";
+        qDebug() << QString("连接登录服务器:[%1:%2]").arg(hostName).arg(port);
 
         this->m_Email = Email;
         this->m_Password = Password;
