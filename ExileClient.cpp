@@ -40,7 +40,14 @@ void ExileClient::on_client_readyRead()
             this->SendLogin(m_Email, m_Password);
             break;
         case MSG_SERVER::LoginResult:
-            this->RecvLoginResult();
+            if (this->RecvLoginResult())
+            {
+                // 登录成功,获取赛区列表
+                SendGetLeagueList();
+            }
+            break;
+        case MSG_SERVER::LeagueList:
+            RecvLeagueList();
             break;
         case MSG_SERVER::CharacterList:
             this->RecvCharacterList();
@@ -112,7 +119,7 @@ void ExileClient::RecvPublicKey()
     this->EnableCrypto();
 }
 
-// Login
+// 登录
 
 void ExileClient::SendLogin(const QString &Email, const QString &Password)
 {
@@ -168,6 +175,87 @@ bool ExileClient::RecvLoginResult()
     return true;
 }
 
+// 获取赛区列表
+
+void ExileClient::SendGetLeagueList()
+{
+    qDebug() << "请求赛区列表";
+    this->write<quint16>((quint16)MSG_CLIENT::GetLeagueList);
+}
+
+void ExileClient::RecvLeagueList()
+{
+    qDebug() << "收到赛区列表";
+
+    this->read(8); // ??
+
+    quint32 size = this->read<quint32>();
+
+    for (size_t i = 0; i < size; i++)
+    {
+        qDebug() << "[" << i << "]" << this->readString(); // LeagueName
+        this->readString();
+
+        this->readString();
+        this->readString();
+
+        this->read(8);
+        this->read(8);
+        this->read(8);
+        this->read(2);
+        this->read(1);
+        this->read(1);
+    }
+}
+
+// 创建角色
+
+void ExileClient::SendCreateCharacter(QString Name, QString League, Character::ClassType classType)
+{
+    QString ClassTypeString = Character::GetClassTypeById(classType);
+    QString ClassNameString = Character::GetClassNameById(classType);
+
+    qDebug() << QString("创建角色 name:%1 league:%2 classType:%3 className:%4")
+                    .arg(Name)
+                    .arg(League)
+                    .arg(ClassTypeString)
+                    .arg(ClassNameString);
+
+    this->write<quint16>((quint16)MSG_CLIENT::CreateCharacter); // PacketId
+    this->write(Name);                                          // 角色名
+    this->write(League);                                        // 赛区名
+    this->write<quint32>(0);                                    // ??
+    this->write<quint32>(0);                                    // ??
+    this->write(ClassTypeString + "Default");                   // 职业
+    this->write(QByteArray(0x20, 0));                           // ??
+}
+
+bool ExileClient::RecvCreateCharacterResult()
+{
+    qDebug() << "收到创建角色结果";
+
+    quint16 Result = this->read<quint16>();
+    this->read<quint8>();
+
+    if (Result != 0)
+    {
+        quint16 BackendErrorIndex = Result - 1;
+        QJsonObject BackendError = Helper::Data::GetBackendError(BackendErrorIndex);
+        QString errorString = BackendError.value("Id").toString();
+
+        this->readAll();
+        this->setErrorString(errorString);
+        emit errorOccurred(SocketError::RemoteHostClosedError);
+
+        return false;
+    }
+
+    qDebug() << "创建角色成功";
+    return true;
+}
+
+// 收到角色列表
+
 void ExileClient::RecvCharacterList()
 {
     qDebug() << "收到角列表";
@@ -199,6 +287,8 @@ void ExileClient::RecvCharacterList()
     m_CharacterModel.m_LastSelectIndex = this->read<quint32>(); // LastSelectIndex
     m_CharacterModel.m_Unknown1 = this->read<quint8>();         // ??
 }
+
+// 选择角色进入游戏
 
 void ExileClient::SendSelectCharacter(quint32 Index)
 {
@@ -241,46 +331,6 @@ void ExileClient::RecvSelectCharacterResult()
                     .arg(Ticket2);
 
     emit SelectCharacterSuccess(Ticket1, WorldAreaId, Ticket2, Port, Address, Key);
-}
-
-void ExileClient::SendCreateCharacter(QString Name, QString League, Character::ClassType classType)
-{
-    QString ClassTypeString = Character::GetClassTypeById(classType);
-    QString ClassNameString = Character::GetClassNameById(classType);
-
-    qDebug() << QString("创建角色 name:%1 league:%2 classType:%3 class:%4").arg(Name).arg(League).arg(ClassTypeString).arg(ClassNameString);
-
-    this->write<quint16>((quint16)MSG_CLIENT::CreateCharacter); // PacketId
-    this->write(Name);                                          // 角色名
-    this->write(League);                                        // 赛区名
-    this->write<quint32>(0);                                    // ??
-    this->write<quint32>(0);                                    // ??
-    this->write(ClassTypeString + "Default");                   // 职业
-    this->write(QByteArray(0x20, 0));                           // ??
-}
-
-bool ExileClient::RecvCreateCharacterResult()
-{
-    qDebug() << "收到创建角色结果";
-
-    quint16 Result = this->read<quint16>();
-    this->read<quint8>();
-
-    if (Result != 0)
-    {
-        quint16 BackendErrorIndex = Result - 1;
-        QJsonObject BackendError = Helper::Data::GetBackendError(BackendErrorIndex);
-        QString errorString = BackendError.value("Id").toString();
-
-        this->readAll();
-        this->setErrorString(errorString);
-        emit errorOccurred(SocketError::RemoteHostClosedError);
-
-        return false;
-    }
-
-    qDebug() << "创建角色成功";
-    return true;
 }
 
 void ExileClient::RecvCloseSocket()

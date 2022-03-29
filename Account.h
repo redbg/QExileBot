@@ -22,6 +22,8 @@ public:
 
     ExileClient *m_ExileClient;
 
+    QString m_LastError;
+
 public:
     explicit Account(QObject *parent = nullptr)
         : QThread(parent)
@@ -42,7 +44,9 @@ protected:
     void run() override
     {
         m_ExileClient = new ExileClient;
-        connect(m_ExileClient, &ExileClient::errorOccurred, this, &QThread::quit);
+        connect(m_ExileClient, &ExileClient::errorOccurred, this, [=](QAbstractSocket::SocketError socketError)
+                { m_LastError = m_ExileClient->errorString(); this->quit(); });
+
         connect(m_ExileClient, &ExileClient::LoginSuccess, this, [=](const QString &AccountName)
                 { m_AccountName = AccountName; });
 
