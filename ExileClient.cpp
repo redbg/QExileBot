@@ -24,7 +24,7 @@ void ExileClient::on_client_disconnected()
 
 void ExileClient::on_client_errorOccurred(QAbstractSocket::SocketError socketError)
 {
-    qWarning() << socketError << this->errorString();
+    qWarning() << socketError << m_BackendError << this->errorString();
 }
 
 void ExileClient::on_client_readyRead()
@@ -54,7 +54,7 @@ void ExileClient::on_client_readyRead()
             if (this->m_CharacterModel.m_CharacterList.size())
             {
                 // 有角色,选择角色进入游戏
-                SendSelectCharacter(m_CharacterModel.m_LastSelectIndex);
+                SendSelectCharacter();
             }
             else
             {
@@ -154,10 +154,9 @@ bool ExileClient::RecvLoginResult()
     {
         quint16 BackendErrorIndex = Result - 1;
         QJsonObject BackendError = Helper::Data::GetBackendError(BackendErrorIndex);
-        QString errorString = BackendError.value("Id").toString();
+        m_BackendError = BackendError.value("Id").toString();
 
         this->readAll();
-        this->setErrorString(errorString);
         emit errorOccurred(SocketError::RemoteHostClosedError);
 
         return false;
@@ -241,10 +240,9 @@ bool ExileClient::RecvCreateCharacterResult()
     {
         quint16 BackendErrorIndex = Result - 1;
         QJsonObject BackendError = Helper::Data::GetBackendError(BackendErrorIndex);
-        QString errorString = BackendError.value("Id").toString();
+        m_BackendError = BackendError.value("Id").toString();
 
         this->readAll();
-        this->setErrorString(errorString);
         emit errorOccurred(SocketError::RemoteHostClosedError);
 
         return false;
@@ -290,8 +288,10 @@ void ExileClient::RecvCharacterList()
 
 // 选择角色进入游戏
 
-void ExileClient::SendSelectCharacter(quint32 Index)
+void ExileClient::SendSelectCharacter()
 {
+    quint32 Index = m_CharacterModel.m_LastSelectIndex;
+
     qDebug() << QString("选择角色,进入游戏 Index:%1").arg(Index);
 
     this->write<quint16>((quint16)MSG_CLIENT::SelectCharacter); // PacketId
@@ -305,7 +305,7 @@ void ExileClient::RecvSelectCharacterResult()
 
     quint32 Ticket1 = this->read<quint32>();
     quint32 WorldAreaId = this->read<quint32>();
-    quint32 Ticket2 = this->read<quint32>();
+    quint32 Ticket2 = this->read<quint32>(); // 可能是地图实例Id
 
     quint8 size = this->read<quint8>();
 
@@ -323,14 +323,14 @@ void ExileClient::RecvSelectCharacterResult()
     QByteArray Key = this->read(0x40);
 
     // 连接游戏服务器
-    qDebug() << QString("收到游戏服务器连接地址:[%1:%2] WorldAreaId:[%3] Ticket1:[%4] Ticket2:[%5]")
+    qDebug() << QString("收到游戏服务器连接地址:[%1:%2] Ticket1:[%3] WorldAreaId:[%4] Ticket2:[%5]")
                     .arg(QHostAddress(Address).toString())
                     .arg(Port)
-                    .arg(WorldAreaId)
                     .arg(Ticket1)
+                    .arg(WorldAreaId)
                     .arg(Ticket2);
 
-    emit SelectCharacterSuccess(Ticket1, WorldAreaId, Ticket2, Port, Address, Key);
+    emit SelectCharacterSuccess(this, Ticket1, WorldAreaId, Ticket2, Port, Address, Key);
 }
 
 void ExileClient::RecvCloseSocket()

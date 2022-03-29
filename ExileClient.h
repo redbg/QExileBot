@@ -43,6 +43,8 @@ public:
 
     CharacterModel m_CharacterModel;
 
+    QString m_BackendError;
+
     CryptoPP::byte m_PrivateKey[0x80];
     CryptoPP::byte m_PublicKey[0x80];
 
@@ -54,8 +56,8 @@ public:
         // QMetaObject::connectSlotsByName(this);
         connect(this, &ExileSocket::connected, this, &ExileClient::on_client_connected, Qt::DirectConnection);
         connect(this, &ExileSocket::disconnected, this, &ExileClient::on_client_disconnected, Qt::DirectConnection);
-        connect(this, &ExileSocket::readyRead, this, &ExileClient::on_client_readyRead, Qt::DirectConnection);
         connect(this, &ExileSocket::errorOccurred, this, &ExileClient::on_client_errorOccurred, Qt::DirectConnection);
+        connect(this, &ExileSocket::readyRead, this, &ExileClient::on_client_readyRead, Qt::DirectConnection);
     }
 
     virtual ~ExileClient() {}
@@ -89,12 +91,13 @@ public:
     void RecvCharacterList();
 
     // 选择角色进入游戏
-    void SendSelectCharacter(quint32 Index);
+    void SendSelectCharacter();
     void RecvSelectCharacterResult();
 
+    // 进入游戏成功关闭连接
     void RecvCloseSocket();
 
 signals:
     void LoginSuccess(const QString &AccountName);
-    void SelectCharacterSuccess(quint32 Ticket1, quint32 WorldAreaId, quint32 Ticket2, quint16 Port, quint32 Address, QByteArray Key);
+    void SelectCharacterSuccess(ExileClient *client, quint32 Ticket1, quint32 WorldAreaId, quint32 Ticket2, quint16 Port, quint32 Address, QByteArray Key);
 };

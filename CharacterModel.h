@@ -100,4 +100,9 @@ public:
 
         return JsonArray;
     }
+
+    Character *currentCharacter()
+    {
+        return m_CharacterList.at(m_LastSelectIndex);
+    }
 };
