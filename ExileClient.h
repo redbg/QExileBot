@@ -76,7 +76,6 @@ public:
     // 登录
     void SendLogin(const QString &Email, const QString &Password);
     bool RecvLoginResult();
-    void RecvCharacterList();
 
     // 选择角色进入游戏
     void SendSelectCharacter(quint32 Index);
@@ -85,6 +84,11 @@ public:
     // 创建角色
     void SendCreateCharacter(QString Name, QString League, Character::ClassType classType);
     bool RecvCreateCharacterResult();
+
+    // 角色列表
+    void RecvCharacterList();
+
+    void RecvCloseSocket();
 
 signals:
     void LoginSuccess(const QString &AccountName);

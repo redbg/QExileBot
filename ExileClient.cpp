@@ -61,6 +61,9 @@ void ExileClient::on_client_readyRead()
         case MSG_SERVER::SelectCharacterResult:
             RecvSelectCharacterResult();
             break;
+        case MSG_SERVER::CloseSocket:
+            RecvCloseSocket();
+            break;
         default:
             qWarning() << QString("[!] UnknownPacket PacketId:[0x%1] Data:[%2]")
                               .arg(QString::number(PacketId, 16))
@@ -278,4 +281,11 @@ bool ExileClient::RecvCreateCharacterResult()
 
     qDebug() << "创建角色成功";
     return true;
+}
+
+void ExileClient::RecvCloseSocket()
+{
+    qDebug() << "进入游戏成功,ClientSocket关闭";
+    this->read<quint16>();
+    this->disconnectFromHost();
 }
