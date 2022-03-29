@@ -69,14 +69,24 @@ public slots:
 public:
     void connectToLoginServer(const QString &hostName, quint16 port, const QString &Email, const QString &Password);
 
+    // 公钥
     void SendPublicKey();
     void RecvPublicKey();
 
+    // 登录
     void SendLogin(const QString &Email, const QString &Password);
     bool RecvLoginResult();
-
     void RecvCharacterList();
+
+    // 选择角色进入游戏
+    void SendSelectCharacter(quint32 Index);
+    void RecvSelectCharacterResult();
+
+    // 创建角色
+    void SendCreateCharacter(QString Name, QString League, Character::ClassType classType);
+    bool RecvCreateCharacterResult();
 
 signals:
     void LoginSuccess(const QString &AccountName);
+    void SelectCharacterSuccess(quint32 Ticket1, quint32 WorldAreaId, quint32 Ticket2, quint16 Port, quint32 Address, QByteArray Key);
 };

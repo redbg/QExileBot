@@ -1,5 +1,7 @@
 #include "ExileClient.h"
 
+// public slots:
+
 void ExileClient::connectToLoginServer(const QString &hostName, quint16 port, const QString &Email, const QString &Password)
 {
     qDebug() << QString("连接登录服务器:[%1:%2]").arg(hostName).arg(port);
@@ -11,13 +13,13 @@ void ExileClient::connectToLoginServer(const QString &hostName, quint16 port, co
 
 void ExileClient::on_client_connected()
 {
-    qDebug() << "on_client_connected";
+    // qDebug() << "on_client_connected";
     this->SendPublicKey();
 }
 
 void ExileClient::on_client_disconnected()
 {
-    qDebug() << "on_client_disconnected";
+    // qDebug() << "on_client_disconnected";
 }
 
 void ExileClient::on_client_errorOccurred(QAbstractSocket::SocketError socketError)
@@ -42,6 +44,22 @@ void ExileClient::on_client_readyRead()
             break;
         case MSG_SERVER::CharacterList:
             this->RecvCharacterList();
+            if (this->m_CharacterModel.m_CharacterList.size())
+            {
+                // 有角色,选择角色进入游戏
+                SendSelectCharacter(m_CharacterModel.m_LastSelectIndex);
+            }
+            else
+            {
+                // 没有角色,创建角色
+                SendCreateCharacter(Helper::GetRandomString(20), Global::league, Global::classType);
+            }
+            break;
+        case MSG_SERVER::CreateCharacterResult:
+            RecvCreateCharacterResult();
+            break;
+        case MSG_SERVER::SelectCharacterResult:
+            RecvSelectCharacterResult();
             break;
         default:
             qWarning() << QString("[!] UnknownPacket PacketId:[0x%1] Data:[%2]")
@@ -71,6 +89,7 @@ void ExileClient::SendPublicKey()
 void ExileClient::RecvPublicKey()
 {
     // qDebug() << "收到公钥";
+
     CryptoPP::DH dh(Global::p, Global::q, Global::g);
 
     QByteArray serverPublicKey = this->read(this->read<quint16>()); // serverPublicKey
@@ -119,11 +138,11 @@ bool ExileClient::RecvLoginResult()
 {
     qDebug() << "收到登录结果";
 
-    quint16 LoginResult = this->read<quint16>(); // LoginResult
+    quint16 Result = this->read<quint16>(); // LoginResult
 
-    if (LoginResult != 0)
+    if (Result != 0)
     {
-        quint16 BackendErrorIndex = LoginResult - 1;
+        quint16 BackendErrorIndex = Result - 1;
         QJsonObject BackendError = Helper::Data::GetBackendError(BackendErrorIndex);
         QString errorString = BackendError.value("Id").toString();
 
@@ -152,7 +171,7 @@ void ExileClient::RecvCharacterList()
 
     m_CharacterModel.clear();
 
-    quint32 CharacterSize = this->read<quint32>();
+    quint32 CharacterSize = this->read<quint32>(); // Size
 
     for (quint32 i = 0; i < CharacterSize; i++)
     {
@@ -176,4 +195,87 @@ void ExileClient::RecvCharacterList()
 
     m_CharacterModel.m_LastSelectIndex = this->read<quint32>(); // LastSelectIndex
     m_CharacterModel.m_Unknown1 = this->read<quint8>();         // ??
+}
+
+void ExileClient::SendSelectCharacter(quint32 Index)
+{
+    qDebug() << QString("选择角色,进入游戏 Index:%1").arg(Index);
+
+    this->write<quint16>((quint16)MSG_CLIENT::SelectCharacter); // PacketId
+    this->write<quint8>(0);                                     // 语言
+    this->write<quint32>(Index);                                // 角色下标
+}
+
+void ExileClient::RecvSelectCharacterResult()
+{
+    qDebug() << "收到选择角色结果,正在进入游戏...";
+
+    quint32 Ticket1 = this->read<quint32>();
+    quint32 WorldAreaId = this->read<quint32>();
+    quint32 Ticket2 = this->read<quint32>();
+
+    quint8 size = this->read<quint8>();
+
+    quint16 Port = 0;
+    quint32 Address = 0;
+
+    for (quint8 i = 0; i < size; i++)
+    {
+        this->read<quint16>();
+        Port = this->read<quint16>();
+        Address = this->read<quint32>();
+        this->read(0x14);
+    }
+
+    QByteArray Key = this->read(0x40);
+
+    // 连接游戏服务器
+    qDebug() << QString("收到游戏服务器连接地址:[%1:%2] WorldAreaId:[%3] Ticket1:[%4] Ticket2:[%5]")
+                    .arg(QHostAddress(Address).toString())
+                    .arg(Port)
+                    .arg(WorldAreaId)
+                    .arg(Ticket1)
+                    .arg(Ticket2);
+
+    emit SelectCharacterSuccess(Ticket1, WorldAreaId, Ticket2, Port, Address, Key);
+}
+
+void ExileClient::SendCreateCharacter(QString Name, QString League, Character::ClassType classType)
+{
+    QString ClassTypeString = Character::GetClassTypeById(classType);
+    QString ClassNameString = Character::GetClassNameById(classType);
+
+    qDebug() << QString("创建角色 name:%1 league:%2 classType:%3 class:%4").arg(Name).arg(League).arg(ClassTypeString).arg(ClassNameString);
+
+    this->write<quint16>((quint16)MSG_CLIENT::CreateCharacter); // PacketId
+    this->write(Name);                                          // 角色名
+    this->write(League);                                        // 赛区名
+    this->write<quint32>(0);                                    // ??
+    this->write<quint32>(0);                                    // ??
+    this->write(ClassTypeString + "Default");                   // 职业
+    this->write(QByteArray(0x20, 0));                           // ??
+}
+
+bool ExileClient::RecvCreateCharacterResult()
+{
+    qDebug() << "收到创建角色结果";
+
+    quint16 Result = this->read<quint16>();
+    this->read<quint8>();
+
+    if (Result != 0)
+    {
+        quint16 BackendErrorIndex = Result - 1;
+        QJsonObject BackendError = Helper::Data::GetBackendError(BackendErrorIndex);
+        QString errorString = BackendError.value("Id").toString();
+
+        this->readAll();
+        this->setErrorString(errorString);
+        emit errorOccurred(SocketError::RemoteHostClosedError);
+
+        return false;
+    }
+
+    qDebug() << "创建角色成功";
+    return true;
 }
