@@ -83,6 +83,14 @@ public slots:
                 // 开启加密
                 this->EnableCrypto();
                 break;
+            case 0x13:
+            {
+                quint16 size = this->read<quint16>();
+                this->read<quint16>();
+                this->read(size * 2);
+                this->read(size);
+            }
+            break;
             default:
                 qWarning() << QString("[!] UnknownPacket PacketId:[0x%1] Data:[%2]")
                                   .arg(QString::number(PacketId, 16))
