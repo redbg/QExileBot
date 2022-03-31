@@ -52,6 +52,7 @@ protected:
         m_ExileClient = new ExileClient;
         // m_ExileGame
         m_ExileGame = new ExileGame;
+        m_ExileGame->m_ExileClient = m_ExileClient;
 
         // errorOccurred
         connect(m_ExileClient, &ExileClient::errorOccurred, this, [=](QAbstractSocket::SocketError socketError)

@@ -99,5 +99,5 @@ public:
 
 signals:
     void LoginSuccess(const QString &AccountName);
-    void SelectCharacterSuccess(ExileClient *client, quint32 Ticket1, quint32 WorldAreaId, quint32 Ticket2, quint16 Port, quint32 Address, QByteArray Key);
+    void SelectCharacterSuccess(quint32 Ticket1, quint32 WorldAreaId, quint32 Ticket2, quint16 Port, quint32 Address, QByteArray Key);
 };

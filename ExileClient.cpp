@@ -330,7 +330,7 @@ void ExileClient::RecvSelectCharacterResult()
                     .arg(WorldAreaId)
                     .arg(Ticket2);
 
-    emit SelectCharacterSuccess(this, Ticket1, WorldAreaId, Ticket2, Port, Address, Key);
+    emit SelectCharacterSuccess(Ticket1, WorldAreaId, Ticket2, Port, Address, Key);
 }
 
 void ExileClient::RecvCloseSocket()
