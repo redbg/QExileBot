@@ -88,11 +88,15 @@ void MainWindow::on_actionQuit_triggered()
 
 void MainWindow::on_actionCharacterList_triggered()
 {
-    Account *account = m_AccountModel.at(ui->AccountView->currentIndex().row());
+    QModelIndex currentIndex = ui->AccountView->currentIndex();
 
-    if (account->isRunning())
+    if (currentIndex.isValid())
     {
-        m_CharacterView.setModel(&account->m_ExileClient->m_CharacterModel);
-        m_CharacterView.show();
+        Account *account = m_AccountModel.at(currentIndex.row());
+        if (account->isRunning())
+        {
+            m_CharacterView.setModel(&account->m_ExileClient->m_CharacterModel);
+            m_CharacterView.show();
+        }
     }
 }
