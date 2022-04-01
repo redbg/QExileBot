@@ -64,7 +64,7 @@ bool AccountModel::insertRows(int row, int count, const QModelIndex &parent)
 
     for (int i = 0; i < count; i++)
     {
-        m_AccountList.insert(row == -1 ? 0 : row, new Account(this));
+        m_AccountList.insert(row, new Account(this));
     }
 
     endInsertRows();
@@ -73,11 +73,6 @@ bool AccountModel::insertRows(int row, int count, const QModelIndex &parent)
 
 bool AccountModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    if (row == -1)
-    {
-        return false;
-    }
-
     beginRemoveRows(parent, row, row + count - 1);
 
     qDeleteAll(m_AccountList.begin() + row, m_AccountList.begin() + row + count); // delete
@@ -116,18 +111,12 @@ void AccountModel::fromJson(QJsonValue JsonValue)
 
 void AccountModel::start(const QModelIndex &index)
 {
-    if (index.isValid())
-    {
-        m_AccountList.at(index.row())->start();
-    }
+    m_AccountList.at(index.row())->start();
 }
 
 void AccountModel::quit(const QModelIndex &index)
 {
-    if (index.isValid())
-    {
-        m_AccountList.at(index.row())->quit();
-    }
+    m_AccountList.at(index.row())->quit();
 }
 
 Account *AccountModel::at(int row)

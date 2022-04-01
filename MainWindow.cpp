@@ -46,12 +46,22 @@ void MainWindow::readSettings()
 
 void MainWindow::on_actionInsert_triggered()
 {
-    m_AccountModel.insertRow(ui->AccountView->currentIndex().row());
+    QModelIndex currentIndex = ui->AccountView->currentIndex();
+
+    if (currentIndex.isValid())
+    {
+        m_AccountModel.insertRow(currentIndex.row());
+    }
 }
 
 void MainWindow::on_actionRemove_triggered()
 {
-    m_AccountModel.removeRow(ui->AccountView->currentIndex().row());
+    QModelIndex currentIndex = ui->AccountView->currentIndex();
+
+    if (currentIndex.isValid())
+    {
+        m_AccountModel.removeRow(currentIndex.row());
+    }
 }
 
 void MainWindow::on_actionMyAccount_triggered()
@@ -78,12 +88,22 @@ void MainWindow::on_actionMyAccount_triggered()
 
 void MainWindow::on_actionStart_triggered()
 {
-    m_AccountModel.start(ui->AccountView->currentIndex());
+    QModelIndex currentIndex = ui->AccountView->currentIndex();
+
+    if (currentIndex.isValid())
+    {
+        m_AccountModel.start(currentIndex);
+    }
 }
 
 void MainWindow::on_actionQuit_triggered()
 {
-    m_AccountModel.quit(ui->AccountView->currentIndex());
+    QModelIndex currentIndex = ui->AccountView->currentIndex();
+
+    if (currentIndex.isValid())
+    {
+        m_AccountModel.quit(currentIndex);
+    }
 }
 
 void MainWindow::on_actionCharacterList_triggered()
@@ -93,6 +113,7 @@ void MainWindow::on_actionCharacterList_triggered()
     if (currentIndex.isValid())
     {
         Account *account = m_AccountModel.at(currentIndex.row());
+
         if (account->isRunning())
         {
             m_CharacterView.setModel(&account->m_ExileClient->m_CharacterModel);
