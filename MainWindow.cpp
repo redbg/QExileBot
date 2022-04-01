@@ -56,6 +56,11 @@ void MainWindow::on_actionRemove_triggered()
 
 void MainWindow::on_actionMyAccount_triggered()
 {
+    if (m_AccountModel.m_AccountList.size() == 0)
+    {
+        return;
+    }
+
     QUrl url("https://www.pathofexile.com/my-account");
     QModelIndex currentIndex = ui->AccountView->currentIndex();
     QByteArray POESESSID = m_AccountModel.at(currentIndex.row())->m_POESESSID.toLatin1();

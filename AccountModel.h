@@ -12,7 +12,7 @@ class AccountModel : public QAbstractTableModel
 {
     Q_OBJECT
 
-private:
+public:
     QList<Account *> m_AccountList;
 
 public:
