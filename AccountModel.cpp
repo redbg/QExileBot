@@ -116,12 +116,18 @@ void AccountModel::fromJson(QJsonValue JsonValue)
 
 void AccountModel::start(const QModelIndex &index)
 {
-    m_AccountList.at(index.row())->start();
+    if (index.isValid())
+    {
+        m_AccountList.at(index.row())->start();
+    }
 }
 
 void AccountModel::quit(const QModelIndex &index)
 {
-    m_AccountList.at(index.row())->quit();
+    if (index.isValid())
+    {
+        m_AccountList.at(index.row())->quit();
+    }
 }
 
 Account *AccountModel::at(int row)
