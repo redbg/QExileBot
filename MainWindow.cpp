@@ -56,26 +56,24 @@ void MainWindow::on_actionRemove_triggered()
 
 void MainWindow::on_actionMyAccount_triggered()
 {
-    if (m_AccountModel.m_AccountList.size() == 0)
-    {
-        return;
-    }
-
-    QUrl url("https://www.pathofexile.com/my-account");
     QModelIndex currentIndex = ui->AccountView->currentIndex();
-    QByteArray POESESSID = m_AccountModel.at(currentIndex.row())->m_POESESSID.toLatin1();
-    QNetworkCookie cookie("POESESSID", POESESSID);
 
-    QWebEnginePage *page = m_WebEngineView.page();
-    QWebEngineProfile *profile = page->profile();
-    QWebEngineCookieStore *cookieStore = profile->cookieStore();
+    if (currentIndex.isValid())
+    {
+        QUrl url("https://www.pathofexile.com/my-account");
+        QByteArray POESESSID = m_AccountModel.at(currentIndex.row())->m_POESESSID.toLatin1();
+        QNetworkCookie cookie("POESESSID", POESESSID);
+        QWebEnginePage *page = m_WebEngineView.page();
+        QWebEngineProfile *profile = page->profile();
+        QWebEngineCookieStore *cookieStore = profile->cookieStore();
 
-    cookieStore->deleteAllCookies();
-    cookieStore->setCookie(cookie, url);
+        cookieStore->deleteAllCookies();
+        cookieStore->setCookie(cookie, url);
 
-    m_WebEngineView.setWindowTitle(POESESSID);
-    m_WebEngineView.load(url);
-    m_WebEngineView.show();
+        m_WebEngineView.setWindowTitle(POESESSID);
+        m_WebEngineView.load(url);
+        m_WebEngineView.show();
+    }
 }
 
 void MainWindow::on_actionStart_triggered()
