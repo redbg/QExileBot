@@ -13,7 +13,10 @@ public:
 
     quint32 m_Ticket1;
     quint32 m_Ticket2;
+
     quint32 m_WorldAreaId;
+    QString m_LeagueName;
+    quint32 m_Seed;
 
 public:
     enum MSG_CLIENT : quint16
@@ -81,9 +84,22 @@ public slots:
             switch (PacketId)
             {
             case 0x5:
+            {
                 // 开启加密
                 this->EnableCrypto();
                 break;
+            }
+            case 0x10:
+            {
+                // 收到地图信息
+                m_WorldAreaId = this->read<quint16>();
+                m_LeagueName = this->readString();
+                m_Seed = this->read<quint32>();
+                this->readAll();
+
+                SendTileHash(0x6BD84458, 0);
+                break;
+            }
             case 0x13:
             {
                 quint16 size = this->read<quint16>();
@@ -118,5 +134,12 @@ public:
         this->write<quint8>(0x00);
         this->write<quint8>(0x00);
         this->write<quint8>(0x01);
+    }
+
+    void SendTileHash(quint32 tileHash, quint32 doodadHash)
+    {
+        this->write<quint16>(0x53);
+        this->write(tileHash);
+        this->write(doodadHash);
     }
 };
