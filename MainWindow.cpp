@@ -52,6 +52,10 @@ void MainWindow::on_actionInsert_triggered()
     {
         m_AccountModel.insertRow(currentIndex.row());
     }
+    else
+    {
+        m_AccountModel.insertRow(0);
+    }
 }
 
 void MainWindow::on_actionRemove_triggered()
