@@ -29,7 +29,7 @@ void Account::fromJson(QJsonValue JsonValue)
     }
 }
 
-void Account::run() override
+void Account::run()
 {
     m_BackendError.clear();
 
