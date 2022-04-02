@@ -3,6 +3,10 @@
 #include "Global.h"
 #include "Helper.h"
 #include "ExileClient.h"
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 class ExileGame : public ExileSocket
 {
@@ -97,7 +101,17 @@ public slots:
                 m_Seed = this->read<quint32>();
                 this->readAll();
 
-                SendTileHash(0x6BD84458, 0);
+                QNetworkAccessManager *mgr = new QNetworkAccessManager;
+                QUrl url(QString("http://127.0.0.1:6112/world?id=%1&seed=%2").arg(m_WorldAreaId).arg(m_Seed));
+                mgr->get(QNetworkRequest(url));
+                connect(mgr, &QNetworkAccessManager::finished, this, [=](QNetworkReply *reply)
+                        {QJsonObject json = QJsonDocument::fromJson(reply->readAll()).object();
+                        qDebug() << json;
+                        qint64 TileHash = json.value("TileHash").toInteger();
+                        qint64 DoodadHash = json.value("DoodadHash").toInteger(); 
+                        this->SendTileHash(TileHash, DoodadHash); // SendTileHash
+                        reply->deleteLater();
+                        mgr->deleteLater(); });
                 break;
             }
             case 0x13:
@@ -108,6 +122,9 @@ public slots:
                 this->read(size);
             }
             break;
+            case 0x21a:
+                // 服务器心跳
+                break;
             default:
                 qWarning() << QString("[!] UnknownPacket PacketId:[0x%1] Data:[%2]")
                                   .arg(QString::number(PacketId, 16))
@@ -138,6 +155,7 @@ public:
 
     void SendTileHash(quint32 tileHash, quint32 doodadHash)
     {
+        qDebug() << QString("SendTileHash(%1, %2)").arg(tileHash).arg(doodadHash);
         this->write<quint16>(0x53);
         this->write(tileHash);
         this->write(doodadHash);
