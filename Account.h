@@ -45,4 +45,16 @@ public:
 
 protected:
     void run() override;
+
+public slots:
+    void on_BackendError(quint16 Result)
+    {
+        quint16 BackendErrorIndex = Result - 1;
+        QJsonObject BackendError = Helper::Data::GetBackendError(BackendErrorIndex);
+        m_BackendError = BackendError.value("Id").toString();
+
+        qWarning() << "BackendError:" << m_BackendError;
+
+        this->quit();
+    }
 };

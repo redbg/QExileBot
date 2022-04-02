@@ -43,8 +43,6 @@ public:
 
     CharacterModel m_CharacterModel;
 
-    QString m_BackendError;
-
     CryptoPP::byte m_PrivateKey[0x80];
     CryptoPP::byte m_PublicKey[0x80];
 
@@ -100,4 +98,5 @@ public:
 signals:
     void LoginSuccess(const QString &AccountName);
     void SelectCharacterSuccess(quint32 Ticket1, quint32 WorldAreaId, quint32 Ticket2, quint16 Port, quint32 Address, QByteArray Key);
+    void signal_BackendError(quint16 Result);
 };

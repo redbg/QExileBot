@@ -39,16 +39,13 @@ void Account::run()
     m_ExileGame = new ExileGame;
     m_ExileGame->m_ExileClient = m_ExileClient;
 
-    // errorOccurred
-    connect(
-        m_ExileClient, &ExileClient::errorOccurred, this, [=](QAbstractSocket::SocketError socketError)
-        { m_BackendError = m_ExileClient->m_BackendError; this->quit(); },
-        Qt::DirectConnection);
+    // signal_BackendError
+    connect(m_ExileClient, &ExileClient::signal_BackendError, this, &Account::on_BackendError, Qt::DirectConnection);
+    connect(m_ExileGame, &ExileGame::signal_BackendError, this, &Account::on_BackendError, Qt::DirectConnection);
 
-    connect(
-        m_ExileGame, &ExileGame::errorOccurred, this, [=](QAbstractSocket::SocketError socketError)
-        { m_BackendError = m_ExileClient->m_BackendError; this->quit(); },
-        Qt::DirectConnection);
+    // errorOccurred
+    connect(m_ExileClient, &ExileClient::errorOccurred, this, &Account::quit, Qt::DirectConnection);
+    connect(m_ExileGame, &ExileGame::errorOccurred, this, &Account::quit, Qt::DirectConnection);
 
     // 登录成功
     connect(

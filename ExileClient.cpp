@@ -13,18 +13,18 @@ void ExileClient::connectToLoginServer(const QString &hostName, quint16 port, co
 
 void ExileClient::on_client_connected()
 {
-    // qDebug() << "on_client_connected";
+    qDebug() << "on_client_connected";
     this->SendPublicKey();
 }
 
 void ExileClient::on_client_disconnected()
 {
-    // qDebug() << "on_client_disconnected";
+    qDebug() << "on_client_disconnected";
 }
 
 void ExileClient::on_client_errorOccurred(QAbstractSocket::SocketError socketError)
 {
-    qWarning() << socketError << m_BackendError << this->errorString();
+    qWarning() << socketError << this->errorString();
 }
 
 void ExileClient::on_client_readyRead()
@@ -152,13 +152,8 @@ bool ExileClient::RecvLoginResult()
 
     if (Result != 0)
     {
-        quint16 BackendErrorIndex = Result - 1;
-        QJsonObject BackendError = Helper::Data::GetBackendError(BackendErrorIndex);
-        m_BackendError = BackendError.value("Id").toString();
-
         this->readAll();
-        emit errorOccurred(SocketError::RemoteHostClosedError);
-
+        emit signal_BackendError(Result);
         return false;
     }
 
@@ -238,13 +233,7 @@ bool ExileClient::RecvCreateCharacterResult()
 
     if (Result != 0)
     {
-        quint16 BackendErrorIndex = Result - 1;
-        QJsonObject BackendError = Helper::Data::GetBackendError(BackendErrorIndex);
-        m_BackendError = BackendError.value("Id").toString();
-
-        this->readAll();
-        emit errorOccurred(SocketError::RemoteHostClosedError);
-
+        emit signal_BackendError(Result);
         return false;
     }
 

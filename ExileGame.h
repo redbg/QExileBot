@@ -92,4 +92,7 @@ public:
         this->write(tileHash);
         this->write(doodadHash);
     }
+
+signals:
+    void signal_BackendError(quint16 BackendError);
 };

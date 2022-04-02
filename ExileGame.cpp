@@ -60,6 +60,13 @@ void ExileGame::on_game_readyRead()
             this->read(size);
             break;
         }
+        case 0x19:
+        {
+            // 游戏服务器错误
+            quint16 BackendError = this->read<quint16>(); // error Id
+            this->readString();                           // ??
+            emit signal_BackendError(BackendError);
+        }
         case 0x21a:
             // 服务器心跳
             break;
