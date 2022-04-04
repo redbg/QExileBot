@@ -22,6 +22,8 @@ public:
     QString m_LeagueName;
     quint32 m_Seed;
 
+    quint32 m_PlayerId;
+
 public:
     enum MSG_CLIENT : quint16
     {
@@ -91,6 +93,15 @@ public:
         this->write<quint16>(0x53);
         this->write(tileHash);
         this->write(doodadHash);
+    }
+
+public:
+    quint32 readGameObjectId()
+    {
+        quint32 id = this->read<quint32>();
+        this->read<quint32>();
+        this->read<quint16>();
+        return id;
     }
 
 signals:

@@ -19,5 +19,6 @@ namespace Helper
         QJsonArray GetDataArray(QString fileName);
         QJsonObject GetBackendError(quint16 index);
         QJsonObject GetCharacter(quint8 ClassId);
+        QJsonObject GetInventorie(quint32 InventoryId);
     };
 };

@@ -58,5 +58,10 @@ namespace Helper
 
             return QJsonObject();
         }
+
+        QJsonObject GetInventorie(quint32 InventoryId)
+        {
+            return GetDataArray(":/Data/Inventories.json").at(InventoryId).toObject();
+        }
     };
 };

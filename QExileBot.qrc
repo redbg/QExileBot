@@ -3,5 +3,6 @@
         <file>qss/default.qss</file>
         <file>Data/BackendErrors.json</file>
         <file>Data/Characters.json</file>
+        <file>Data/Inventories.json</file>
     </qresource>
 </RCC>
