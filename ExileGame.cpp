@@ -43,10 +43,9 @@ void ExileGame::on_game_readyRead()
             QUrl url(QString("http://127.0.0.1:6112/world?id=%1&seed=%2").arg(m_WorldAreaId).arg(m_Seed));
             mgr->get(QNetworkRequest(url));
             connect(mgr, &QNetworkAccessManager::finished, this, [=](QNetworkReply *reply)
-                    {QJsonObject json = QJsonDocument::fromJson(reply->readAll()).object();
-                        qDebug() << "world" << json;
-                        qint64 TileHash = json.value("TileHash").toInteger();
-                        qint64 DoodadHash = json.value("DoodadHash").toInteger(); 
+                    {
+                        uint TileHash = reply->rawHeader("TileHash").toUInt();
+                        uint DoodadHash = reply->rawHeader("DoodadHash").toUInt();
                         this->SendTileHash(TileHash, DoodadHash); // <<<<<<<<<< SendTileHash
                         reply->deleteLater();
                         mgr->deleteLater(); });
