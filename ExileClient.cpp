@@ -90,7 +90,7 @@ void ExileClient::SendPublicKey()
     CryptoPP::DH dh(Global::p, Global::q, Global::g);
     dh.GenerateKeyPair(rng, this->m_PrivateKey, this->m_PublicKey);
 
-    this->write<quint16>((quint16)MSG_CLIENT::ClientPublicKey);        // PacketId
+    this->writeId((quint16)MSG_CLIENT::ClientPublicKey, "发送公钥");   // PacketId
     this->write<quint16>(sizeof(this->m_PublicKey));                   // PublicKeySize
     this->write((char *)this->m_PublicKey, sizeof(this->m_PublicKey)); // PublicKey
     this->write<quint16>(0);                                           // DsaKeySize
@@ -133,7 +133,7 @@ void ExileClient::SendLogin(const QString &Email, const QString &Password)
     QByteArray MacAddressHash = QCryptographicHash::hash(
         QByteArray((char *)Email.data(), Email.size() * 2), QCryptographicHash::Sha256);
 
-    this->write<quint16>((quint16)MSG_CLIENT::Login);                    // PacketId
+    this->writeId((quint16)MSG_CLIENT::Login, "登录");                   // PacketId
     this->write<quint32>(0x2);                                           // ??
     this->write(Email);                                                  // Email
     this->write((char *)Global::ClientHash, sizeof(Global::ClientHash)); // ClientHash
@@ -174,7 +174,7 @@ bool ExileClient::RecvLoginResult()
 void ExileClient::SendGetLeagueList()
 {
     qDebug() << "请求赛区列表";
-    this->write<quint16>((quint16)MSG_CLIENT::GetLeagueList);
+    this->writeId((quint16)MSG_CLIENT::GetLeagueList, "请求赛区列表");
 }
 
 void ExileClient::RecvLeagueList()
@@ -215,13 +215,13 @@ void ExileClient::SendCreateCharacter(QString Name, QString League, Character::C
                     .arg(ClassTypeString)
                     .arg(ClassNameString);
 
-    this->write<quint16>((quint16)MSG_CLIENT::CreateCharacter); // PacketId
-    this->write(Name);                                          // 角色名
-    this->write(League);                                        // 赛区名
-    this->write<quint32>(0);                                    // ??
-    this->write<quint32>(0);                                    // ??
-    this->write(ClassTypeString + "Default");                   // 职业
-    this->write(QByteArray(0x20, 0));                           // ??
+    this->writeId((quint16)MSG_CLIENT::CreateCharacter, "创建角色"); // PacketId
+    this->write(Name);                                               // 角色名
+    this->write(League);                                             // 赛区名
+    this->write<quint32>(0);                                         // ??
+    this->write<quint32>(0);                                         // ??
+    this->write(ClassTypeString + "Default");                        // 职业
+    this->write(QByteArray(0x20, 0));                                // ??
 }
 
 bool ExileClient::RecvCreateCharacterResult()
@@ -283,9 +283,9 @@ void ExileClient::SendSelectCharacter()
 
     qDebug() << QString("选择角色,进入游戏 Index:%1").arg(Index);
 
-    this->write<quint16>((quint16)MSG_CLIENT::SelectCharacter); // PacketId
-    this->write<quint8>(0);                                     // 语言
-    this->write<quint32>(Index);                                // 角色下标
+    this->writeId((quint16)MSG_CLIENT::SelectCharacter, "选择角色,进入游戏"); // PacketId
+    this->write<quint8>(0);                                                   // 语言
+    this->write<quint32>(Index);                                              // 角色下标
 }
 
 void ExileClient::RecvSelectCharacterResult()

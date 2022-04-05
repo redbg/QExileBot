@@ -32,6 +32,10 @@ add_executable(QExileBot
 
     ExileSocket.cpp
     ExileSocket.h
+
+    Packet.h
+    PacketField.h
+    PacketListModel.h
     
     ExileClient.cpp
     ExileClient.h

@@ -35,6 +35,7 @@
     </property>
     <addaction name="actionStart"/>
     <addaction name="actionQuit"/>
+    <addaction name="actionPacketList"/>
     <addaction name="actionCharacterList"/>
     <addaction name="actionInsert"/>
     <addaction name="actionRemove"/>
@@ -51,6 +52,11 @@
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionPacketList">
+   <property name="text">
+    <string>PacketList</string>
    </property>
   </action>
   <action name="actionCharacterList">

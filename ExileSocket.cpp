@@ -16,12 +16,15 @@ void ExileSocket::EnableCrypto()
 
 // ========== write ==========
 
-qint64 ExileSocket::write(QByteArray data)
+qint64 ExileSocket::write(QByteArray data, int type, QString name)
 {
     if (data.size() == 0)
     {
         return 0;
     }
+
+    m_PacketListModel.m_PacketList.last()->m_Fields.append(
+        new PacketField(name, data, type, m_PacketListModel.m_PacketList.last()));
 
     if (this->isCrypto == true)
     {
@@ -33,21 +36,21 @@ qint64 ExileSocket::write(QByteArray data)
     return QTcpSocket::write(data);
 }
 
-qint64 ExileSocket::write(const char *data, qint64 len)
+qint64 ExileSocket::write(const char *data, qint64 len, int type, QString name)
 {
-    return this->write(QByteArray(data, len));
+    return this->write(QByteArray(data, len), type, name);
 }
 
-qint64 ExileSocket::write(QString data)
+qint64 ExileSocket::write(QString data, QString name)
 {
     qint64 size = this->write<quint16>(data.size());
-    size += this->write((char *)data.data(), data.size() * sizeof(char16_t));
+    size += this->write((char *)data.data(), data.size() * sizeof(char16_t), qMetaTypeId<QString>(), name);
     return size;
 }
 
-qint64 ExileSocket::write(const char *data)
+qint64 ExileSocket::write(const char *data, QString name)
 {
-    return this->write(QString(data));
+    return this->write(QString(data), name);
 }
 
 // ========== read ==========

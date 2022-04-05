@@ -110,6 +110,22 @@ void MainWindow::on_actionQuit_triggered()
     }
 }
 
+void MainWindow::on_actionPacketList_triggered()
+{
+    QModelIndex currentIndex = ui->AccountView->currentIndex();
+
+    if (currentIndex.isValid())
+    {
+        Account *account = m_AccountModel.at(currentIndex.row());
+
+        if (account->isRunning())
+        {
+            m_PacketView.setModel(&account->m_ExileClient->m_PacketListModel);
+            m_PacketView.show();
+        }
+    }
+}
+
 void MainWindow::on_actionCharacterList_triggered()
 {
     QModelIndex currentIndex = ui->AccountView->currentIndex();

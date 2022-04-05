@@ -2,16 +2,19 @@
 #include <QTcpSocket>
 #include <QtEndian>
 #include <cryptopp/salsa.h>
+#include "PacketListModel.h"
 
 class ExileSocket : public QTcpSocket
 {
     Q_OBJECT
 
-private:
+public:
     CryptoPP::Salsa20::Encryption m_Encryption;
     CryptoPP::Salsa20::Decryption m_Decryption;
 
     bool isCrypto;
+
+    PacketListModel m_PacketListModel;
 
 public:
     explicit ExileSocket(QObject *parent = nullptr)
@@ -27,16 +30,25 @@ public:
     void EnableCrypto();
 
 public:
-    qint64 write(QByteArray data);
-    qint64 write(const char *data, qint64 len);
-    qint64 write(QString data);
-    qint64 write(const char *data);
+    qint64 write(QByteArray data, int type = QMetaType::QByteArray, QString name = QString());
+    qint64 write(const char *data, qint64 len, int type = QMetaType::QByteArray, QString name = QString());
+    qint64 write(QString data, QString name = QString());
+    qint64 write(const char *data, QString name = QString());
 
     template <typename T>
-    qint64 write(T data)
+    qint64 write(T data, QString name = QString())
     {
         data = qbswap(data);
-        return this->write((char *)&data, sizeof(data));
+        return this->write((char *)&data, sizeof(data), qMetaTypeId<T>(), name);
+    }
+
+    qint64 writeId(quint16 packetId, QString packetName = QString())
+    {
+        m_PacketListModel.m_PacketList.append(new Packet);
+        m_PacketListModel.m_PacketList.last()->m_PacketType = "send";
+        m_PacketListModel.m_PacketList.last()->m_PacketName = packetName;
+
+        return this->write<quint16>(packetId, "PacketId");
     }
 
 public:
