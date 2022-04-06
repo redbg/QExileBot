@@ -15,10 +15,10 @@ public:
     QByteArray m_Data;
 
 public:
-    PacketField(QString name, QByteArray data, int type, QObject *parent = nullptr)
-        : m_Name(name),
+    PacketField(int type, QString name, QByteArray data, QObject *parent = nullptr)
+        : m_Type(type),
+          m_Name(name),
           m_Data(data),
-          m_Type(type),
           QObject(parent)
     {
     }

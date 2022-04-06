@@ -120,7 +120,7 @@ void MainWindow::on_actionPacketList_triggered()
 
         if (account->isRunning())
         {
-            m_PacketView.setModel(&account->m_ExileClient->m_PacketListModel);
+            m_PacketView.setModel(&account->m_ExileGame->m_PacketListModel);
             m_PacketView.show();
         }
     }

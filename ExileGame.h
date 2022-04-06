@@ -73,7 +73,7 @@ public:
     {
         qDebug() << "SendTicket";
 
-        this->writeId(0x3);
+        this->writeId(0x3, "SendTicket");
 
         this->write<quint32>(this->m_Ticket2);
         this->write<quint16>(0x2);
@@ -90,7 +90,7 @@ public:
     void SendTileHash(quint32 tileHash, quint32 doodadHash)
     {
         qDebug() << QString("SendTileHash(%1, %2)").arg(tileHash).arg(doodadHash);
-        this->writeId(0x53);
+        this->writeId(0x53, "SendTileHash");
         this->write(tileHash);
         this->write(doodadHash);
     }

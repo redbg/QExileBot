@@ -52,15 +52,22 @@ public:
     }
 
 public:
-    QByteArray read(qint64 maxlen);
-    QByteArray readAll();
-    QString readString();
+    QByteArray read(qint64 maxlen, int type = QMetaType::QByteArray, QString name = QString());
+    QByteArray readAll(QString name = QString());
+    QString readString(QString name = QString());
 
     template <typename T>
-    T read()
+    T read(QString name = QString())
     {
-        T data = *(T *)this->read(sizeof(T)).data();
+        T data = *(T *)this->read(sizeof(T), qMetaTypeId<T>(), name).data();
         return qbswap(data);
+    }
+
+    quint16 readId()
+    {
+        m_PacketListModel.m_PacketList.append(new Packet);
+        m_PacketListModel.m_PacketList.last()->m_PacketType = "recv";
+        return this->read<quint16>("PacketId");
     }
 
 public slots:

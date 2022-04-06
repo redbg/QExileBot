@@ -98,4 +98,12 @@ public:
 
         return true;
     }
+
+public:
+    void appendField(int type, QString name, QByteArray data)
+    {
+        m_PacketList.last()->m_Fields.append(
+            new PacketField(type, name, data, m_PacketList.last()));
+        layoutChanged();
+    }
 };

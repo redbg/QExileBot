@@ -31,7 +31,7 @@ void ExileClient::on_client_readyRead()
 {
     while (this->size())
     {
-        quint16 PacketId = this->read<quint16>();
+        quint16 PacketId = this->readId();
 
         switch ((MSG_SERVER)PacketId)
         {
