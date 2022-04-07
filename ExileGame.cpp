@@ -32,6 +32,28 @@ void ExileGame::on_game_readyRead()
             this->EnableCrypto();
             break;
         }
+        case 0xa:
+        {
+            readString();
+            readString();
+            readString();
+
+            read<quint16>();
+            read<quint8>();
+            read<quint8>();
+            quint8 size = read<quint8>();
+            for (size_t i = 0; i < size; i++)
+            {
+               read<quint32>();
+
+                {
+                    read(read<quint16>());
+                }
+            }
+            
+
+            break;
+        }
         case 0xb:
         {
             this->read<quint16>();
@@ -226,7 +248,7 @@ void ExileGame::on_game_readyRead()
         {
             // inventory 库存
             this->read<quint8>();
-            quint32 inventoryId = this->read<quint32>();
+            quint32 inventoryId = this->read<quint32>("id");
 
             qDebug() << Helper::Data::GetInventorie(inventoryId - 1).value("Id").toString();
 
@@ -256,8 +278,8 @@ void ExileGame::on_game_readyRead()
                     for (quint32 i = 0; i < size; i++)
                     {
                         this->read<quint32>();
-                        this->read<quint8>(); // x
-                        this->read<quint8>(); // y
+                        this->read<quint8>("x"); // x
+                        this->read<quint8>("y"); // y
 
                         // item info
                         this->read(this->read<quint16>());
