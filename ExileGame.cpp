@@ -34,24 +34,21 @@ void ExileGame::on_game_readyRead()
         }
         case 0xa:
         {
-            readString();
-            readString();
+            readString("name");
+            readString("text");
             readString();
 
             read<quint16>();
             read<quint8>();
             read<quint8>();
-            quint8 size = read<quint8>();
+
+            quint8 size = read<quint8>("itemSize");
+
             for (size_t i = 0; i < size; i++)
             {
-               read<quint32>();
-
-                {
-                    read(read<quint16>());
-                }
+                read<quint32>("itemIndex");
+                read(read<quint16>("size"), "itemData");
             }
-            
-
             break;
         }
         case 0xb:
@@ -80,10 +77,10 @@ void ExileGame::on_game_readyRead()
         case 0x10:
         {
             // 收到地图信息
-            m_WorldAreaId = this->read<quint16>();
-            m_LeagueName = this->readString();
-            m_Seed = this->read<quint32>();
-            this->readAll();
+            m_WorldAreaId = this->read<quint16>("WorldAreaId");
+            m_LeagueName = this->readString("League");
+            m_Seed = this->read<quint32>("Seed");
+            this->readAll("未知");
 
             QNetworkAccessManager *mgr = new QNetworkAccessManager;
             QUrl url(QString("http://127.0.0.1:6112/world?id=%1&seed=%2").arg(m_WorldAreaId).arg(m_Seed));
@@ -148,7 +145,7 @@ void ExileGame::on_game_readyRead()
         }
         case 0x15:
         {
-            m_PlayerId = this->read<quint32>();
+            m_PlayerId = this->read<quint32>("PlayerId");
             qDebug() << "PlayerId:" << m_PlayerId;
             break;
         }

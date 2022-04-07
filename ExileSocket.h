@@ -52,14 +52,14 @@ public:
     }
 
 public:
-    QByteArray read(qint64 maxlen, int type = QMetaType::QByteArray, QString name = QString());
+    QByteArray read(qint64 maxlen, QString name = QString(), int type = QMetaType::QByteArray);
     QByteArray readAll(QString name = QString());
     QString readString(QString name = QString());
 
     template <typename T>
     T read(QString name = QString())
     {
-        T data = *(T *)this->read(sizeof(T), qMetaTypeId<T>(), name).data();
+        T data = *(T *)this->read(sizeof(T), name, qMetaTypeId<T>()).data();
         return qbswap(data);
     }
 

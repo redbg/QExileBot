@@ -54,7 +54,7 @@ qint64 ExileSocket::write(const char *data, QString name)
 
 // ========== read ==========
 
-QByteArray ExileSocket::read(qint64 maxlen, int type, QString name)
+QByteArray ExileSocket::read(qint64 maxlen, QString name, int type)
 {
     QByteArray data;
 
@@ -82,12 +82,12 @@ QByteArray ExileSocket::read(qint64 maxlen, int type, QString name)
 
 QByteArray ExileSocket::readAll(QString name)
 {
-    return this->read(QTcpSocket::size(), QMetaType::QByteArray, name);
+    return this->read(QTcpSocket::size(), name, QMetaType::QByteArray);
 }
 
 QString ExileSocket::readString(QString name)
 {
-    quint16 size = this->read<quint16>();
-    QByteArray data = this->read(size * sizeof(char16_t), QMetaType::QString, name);
+    quint16 size = this->read<quint16>("size");
+    QByteArray data = this->read(size * sizeof(char16_t), name, QMetaType::QString);
     return data.size() == size * sizeof(char16_t) ? QString::fromUtf16((char16_t *)data.data(), size) : "";
 }
