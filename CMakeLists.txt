@@ -43,6 +43,9 @@ add_executable(QExileBot
     ExileGame.cpp
     ExileGame.h
 
+    GameObject.h
+    GameObjectScene.h
+
     Global.h
     
     Helper.h

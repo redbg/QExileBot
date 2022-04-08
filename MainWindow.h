@@ -18,6 +18,7 @@ private:
     QWebEngineView m_WebEngineView;
     QTreeView m_CharacterView;
     QTreeView m_PacketView;
+    QGraphicsView m_SceneView;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr)
@@ -46,6 +47,7 @@ private slots:
     void on_actionStart_triggered();
     void on_actionQuit_triggered();
     void on_actionPacketList_triggered();
+    void on_actionScene_triggered();
     void on_actionCharacterList_triggered();
     void on_actionInsert_triggered();
     void on_actionRemove_triggered();

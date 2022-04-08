@@ -3,7 +3,7 @@
 void ExileGame::connectToGameServer(quint32 Ticket1, quint32 WorldAreaId, quint32 Ticket2, quint16 Port, quint32 Address, QByteArray Key)
 {
     m_Ticket1 = Ticket1;
-    m_WorldAreaId = WorldAreaId;
+    m_Scene.m_WorldAreaId = WorldAreaId;
     m_Ticket2 = Ticket2;
     this->SetKeyWithIV(Key);
 
@@ -77,24 +77,23 @@ void ExileGame::on_game_readyRead()
         case 0x10:
         {
             // 收到地图信息
-            m_WorldAreaId = this->read<quint16>("WorldAreaId");
-            m_League = this->readString("League");
-            m_Seed = this->read<quint32>("Seed");
+            m_Scene.m_WorldAreaId = this->read<quint16>("WorldAreaId");
+            m_Scene.m_League = this->readString("League");
+            m_Scene.m_Seed = this->read<quint32>("Seed");
             this->readAll("未知");
 
             QNetworkAccessManager *mgr = new QNetworkAccessManager;
-            QUrl url(QString("http://127.0.0.1:6112/world?id=%1&seed=%2").arg(m_WorldAreaId).arg(m_Seed));
+            QUrl url(QString("http://127.0.0.1:6112/world?id=%1&seed=%2").arg(m_Scene.m_WorldAreaId).arg(m_Scene.m_Seed));
             mgr->get(QNetworkRequest(url));
             connect(mgr, &QNetworkAccessManager::finished, this, [=](QNetworkReply *reply)
                     {
-                        m_TileHash = reply->rawHeader("TileHash").toUInt();
-                        m_DoodadHash = reply->rawHeader("DoodadHash").toUInt();
-                        m_TerrainWidth = reply->rawHeader("TerrainWidth").toUInt();
-                        m_TerrainHeight = reply->rawHeader("TerrainHeight").toUInt();
-                        m_TerrainData = reply->readAll();
-                        m_MiniMap = this->miniMap();
-                        m_Scene.setBackgroundBrush(m_MiniMap);
-                        this->SendTileHash(m_TileHash, m_DoodadHash); // <<<<<<<<<< SendTileHash
+                        m_Scene.m_TileHash = reply->rawHeader("TileHash").toUInt();
+                        m_Scene.m_DoodadHash = reply->rawHeader("DoodadHash").toUInt();
+                        m_Scene.m_TerrainWidth = reply->rawHeader("TerrainWidth").toUInt();
+                        m_Scene.m_TerrainHeight = reply->rawHeader("TerrainHeight").toUInt();
+                        m_Scene.m_TerrainData = reply->readAll();
+                        m_Scene.Refresh();
+                        this->SendTileHash(m_Scene.m_TileHash, m_Scene.m_DoodadHash); // <<<<<<<<<< SendTileHash
                         reply->deleteLater();
                         mgr->deleteLater(); });
             break;
@@ -150,8 +149,8 @@ void ExileGame::on_game_readyRead()
         }
         case 0x15:
         {
-            m_PlayerId = this->read<quint32>("PlayerId");
-            qDebug() << "PlayerId:" << m_PlayerId;
+            m_Scene.SetPlayerId(this->read<quint32>("PlayerId"));
+            qDebug() << "PlayerId:" << m_Scene.m_PlayerId;
             break;
         }
         case 0x19:
@@ -442,7 +441,15 @@ void ExileGame::on_game_readyRead()
             quint32 x = this->readData<quint32>(DataStream);
             quint32 y = this->readData<quint32>(DataStream);
 
-            qDebug() << id << Helper::Data::GetObjectType(Hash).value("Path").toString() << x << y;
+            QString Path = Helper::Data::GetObjectType(Hash).value("Path").toString();
+            qDebug() << id << Path << x << y;
+
+
+            QGraphicsTextItem *TextItem = m_Scene.addText(QString::number(id));
+            TextItem->setPos(x, y);
+            TextItem->setDefaultTextColor(Qt::green);
+
+            // m_Scene.addEllipse(x, y, 1, 1, QPen(Qt::green));
             break;
         }
         default:

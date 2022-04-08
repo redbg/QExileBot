@@ -126,6 +126,22 @@ void MainWindow::on_actionPacketList_triggered()
     }
 }
 
+void MainWindow::on_actionScene_triggered()
+{
+    QModelIndex currentIndex = ui->AccountView->currentIndex();
+
+    if (currentIndex.isValid())
+    {
+        Account *account = m_AccountModel.at(currentIndex.row());
+
+        if (account->isRunning())
+        {
+            m_SceneView.setScene(&account->m_ExileGame->m_Scene);
+            m_SceneView.show();
+        }
+    }
+}
+
 void MainWindow::on_actionCharacterList_triggered()
 {
     QModelIndex currentIndex = ui->AccountView->currentIndex();

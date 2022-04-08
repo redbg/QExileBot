@@ -7,7 +7,9 @@
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QGraphicsScene>
+#include "GameObjectScene.h"
+#include "GameObject.h"
+#include <QGraphicsView>
 
 class ExileGame : public ExileSocket
 {
@@ -19,21 +21,7 @@ public:
     quint32 m_Ticket1;
     quint32 m_Ticket2;
 
-    // WorldArea
-    quint32 m_WorldAreaId;
-    QString m_League;
-    quint32 m_Seed;
-    quint32 m_TileHash;
-    quint32 m_DoodadHash;
-
-    // Terrain
-    quint32 m_TerrainWidth;
-    quint32 m_TerrainHeight;
-    QByteArray m_TerrainData;
-    QImage m_MiniMap;
-    QGraphicsScene m_Scene;
-
-    quint32 m_PlayerId;
+    GameObjectScene m_Scene;
 
 public:
     enum MSG_CLIENT : quint16
@@ -107,28 +95,6 @@ public:
     }
 
 public:
-    QImage miniMap()
-    {
-        QImage map(m_TerrainWidth, m_TerrainHeight, QImage::Format_Indexed8);
-
-        for (int i = 0; i < 256; i++)
-        {
-            map.setColor(i, qRgb(0, 0, 0));
-        }
-
-        map.setColor('1', qRgb(255, 255, 255));
-
-        for (quint32 y = 0; y < m_TerrainHeight; y++)
-        {
-            for (quint32 x = 0; x < m_TerrainWidth; x++)
-            {
-                map.setPixel(x, y, m_TerrainData.at((y * m_TerrainWidth) + x + y));
-            }
-        }
-
-        return map;
-    }
-
     template <typename T>
     T readData(QDataStream &DataStream)
     {
