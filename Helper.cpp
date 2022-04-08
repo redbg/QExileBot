@@ -63,5 +63,20 @@ namespace Helper
         {
             return GetDataArray(":/Data/Inventories.json").at(InventoryId).toObject();
         }
+
+        QJsonObject GetObjectType(quint32 Hash)
+        {
+            QJsonArray JsonArray = GetDataArray(":/Data/ObjectTypes.json");
+
+            for (int i = 0; i < JsonArray.size(); i++)
+            {
+                if (JsonArray.at(i).toObject().value("Hash").toInteger() == Hash)
+                {
+                    return JsonArray.at(i).toObject();
+                }
+            }
+
+            return QJsonObject();
+        }
     };
 };

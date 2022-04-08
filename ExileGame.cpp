@@ -207,8 +207,6 @@ void ExileGame::on_game_readyRead()
             this->read<quint8>();
             quint32 inventoryId = this->read<quint32>();
 
-            qDebug() << Helper::Data::GetInventorie(inventoryId - 1).value("Id").toString();
-
             {
                 this->read<quint32>();
                 quint32 size = this->read<quint32>();
@@ -247,14 +245,14 @@ void ExileGame::on_game_readyRead()
             this->read<quint8>();
             quint32 inventoryId = this->read<quint32>("id");
 
-            qDebug() << Helper::Data::GetInventorie(inventoryId - 1).value("Id").toString();
+            qDebug() << inventoryId << Helper::Data::GetInventorie(inventoryId - 1).value("Id").toString();
 
             {
                 // sub_15F00C0
                 this->read<quint8>();
                 this->read<quint8>();
-                this->read<quint8>();
-                this->read<quint8>();
+                this->read<quint8>("Width");
+                this->read<quint8>("Height");
                 quint8 v16 = this->read<quint8>();
                 if ((v16 & 0x8) != 0)
                 {
@@ -270,11 +268,11 @@ void ExileGame::on_game_readyRead()
                 }
 
                 {
-                    quint32 size = this->read<quint32>();
+                    quint32 size = this->read<quint32>("itemSize");
 
                     for (quint32 i = 0; i < size; i++)
                     {
-                        this->read<quint32>();
+                        this->read<quint32>("Index");
                         this->read<quint8>("x"); // x
                         this->read<quint8>("y"); // y
 
@@ -379,9 +377,14 @@ void ExileGame::on_game_readyRead()
         }
         case 0x21e:
         {
-            qDebug() << "GameObjectId:" << readGameObjectId(); // GameObjectId
-            this->read<quint32>();                             // GameObjectHashId
-            this->read(this->read<quint16>());                 // Components Data
+            quint32 id = this->read<quint32>(); // id
+            this->read<quint32>();
+            this->read<quint16>();
+
+            quint32 Hash = this->read<quint32>("Hash"); // GameObjectHashId
+            this->read(this->read<quint16>());          // Components Data
+
+            qDebug() << id << Helper::Data::GetObjectType(Hash).value("Path").toString();
             break;
         }
         default:

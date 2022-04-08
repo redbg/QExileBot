@@ -20,5 +20,6 @@ namespace Helper
         QJsonObject GetBackendError(quint16 index);
         QJsonObject GetCharacter(quint8 ClassId);
         QJsonObject GetInventorie(quint32 InventoryId);
+        QJsonObject GetObjectType(quint32 Hash);
     };
 };

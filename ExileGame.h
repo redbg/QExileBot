@@ -95,15 +95,6 @@ public:
         this->write(doodadHash);
     }
 
-public:
-    quint32 readGameObjectId()
-    {
-        quint32 id = this->read<quint32>();
-        this->read<quint32>();
-        this->read<quint16>();
-        return id;
-    }
-
 signals:
     void signal_BackendError(quint16 BackendError);
 };
