@@ -39,12 +39,13 @@ namespace Helper
 
         QJsonObject GetBackendError(quint16 index)
         {
-            return GetDataArray(":/Data/BackendErrors.json").at(index).toObject();
+            static QJsonArray JsonArray = GetDataArray(":/Data/BackendErrors.json");
+            return JsonArray.at(index).toObject();
         }
 
         QJsonObject GetCharacter(quint8 ClassId)
         {
-            QJsonArray JsonArray = GetDataArray(":/Data/Characters.json");
+            static QJsonArray JsonArray = GetDataArray(":/Data/Characters.json");
 
             for (int i = 0; i < JsonArray.size(); i++)
             {
@@ -61,12 +62,13 @@ namespace Helper
 
         QJsonObject GetInventorie(quint32 InventoryId)
         {
-            return GetDataArray(":/Data/Inventories.json").at(InventoryId).toObject();
+            static QJsonArray JsonArray = GetDataArray(":/Data/Inventories.json");
+            return JsonArray.at(InventoryId).toObject();
         }
 
         QJsonObject GetObjectType(quint32 Hash)
         {
-            QJsonArray JsonArray = GetDataArray(":/Data/ObjectTypes.json");
+            static QJsonArray JsonArray = GetDataArray(":/Data/ObjectTypes.json");
 
             for (int i = 0; i < JsonArray.size(); i++)
             {

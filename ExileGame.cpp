@@ -78,7 +78,7 @@ void ExileGame::on_game_readyRead()
         {
             // 收到地图信息
             m_WorldAreaId = this->read<quint16>("WorldAreaId");
-            m_LeagueName = this->readString("League");
+            m_League = this->readString("League");
             m_Seed = this->read<quint32>("Seed");
             this->readAll("未知");
 
@@ -87,9 +87,14 @@ void ExileGame::on_game_readyRead()
             mgr->get(QNetworkRequest(url));
             connect(mgr, &QNetworkAccessManager::finished, this, [=](QNetworkReply *reply)
                     {
-                        uint TileHash = reply->rawHeader("TileHash").toUInt();
-                        uint DoodadHash = reply->rawHeader("DoodadHash").toUInt();
-                        this->SendTileHash(TileHash, DoodadHash); // <<<<<<<<<< SendTileHash
+                        m_TileHash = reply->rawHeader("TileHash").toUInt();
+                        m_DoodadHash = reply->rawHeader("DoodadHash").toUInt();
+                        m_TerrainWidth = reply->rawHeader("TerrainWidth").toUInt();
+                        m_TerrainHeight = reply->rawHeader("TerrainHeight").toUInt();
+                        m_TerrainData = reply->readAll();
+                        m_MiniMap = this->miniMap();
+                        m_Scene.setBackgroundBrush(m_MiniMap);
+                        this->SendTileHash(m_TileHash, m_DoodadHash); // <<<<<<<<<< SendTileHash
                         reply->deleteLater();
                         mgr->deleteLater(); });
             break;
@@ -381,10 +386,63 @@ void ExileGame::on_game_readyRead()
             this->read<quint32>();
             this->read<quint16>();
 
-            quint32 Hash = this->read<quint32>("Hash"); // GameObjectHashId
-            this->read(this->read<quint16>());          // Components Data
+            quint32 Hash = this->read<quint32>("Hash");                    // GameObjectHashId
+            QByteArray ComponentsData = this->read(this->read<quint16>()); // Components Data
+            QDataStream DataStream(ComponentsData);
 
-            qDebug() << id << Helper::Data::GetObjectType(Hash).value("Path").toString();
+            // Head
+            this->readData<quint8>(DataStream);
+
+            quint8 size = this->readData<quint8>(DataStream);
+
+            for (size_t i = 0; i < size; i++)
+            {
+                this->readData<quint32>(DataStream);
+                quint8 v17 = this->readData<quint8>(DataStream);
+                this->readData<quint8>(DataStream);
+
+                quint8 v21 = this->readData<quint8>(DataStream);
+
+                switch (v21)
+                {
+                case 1:
+                case 4:
+                case 5:
+                    for (quint8 i = 0; i < v17; i++)
+                    {
+                        this->readData<quint32>(DataStream);
+                    }
+                    break;
+                case 3:
+                    for (quint8 i = 0; i < v17; i++)
+                    {
+                        this->readData<quint32>(DataStream);
+                        this->readData<quint32>(DataStream);
+                    }
+                    break;
+                case 6:
+                    for (quint8 i = 0; i < v17; i++)
+                    {
+                        this->readData<quint8>(DataStream);
+                    }
+                    break;
+                case 7:
+                    for (quint8 i = 0; i < v17; i++)
+                    {
+                        quint32 size = this->readData<quint32>(DataStream);
+                        this->readData(DataStream, size);
+                    }
+                    break;
+                default:
+                    break;
+                }
+            }
+
+            // Positioned
+            quint32 x = this->readData<quint32>(DataStream);
+            quint32 y = this->readData<quint32>(DataStream);
+
+            qDebug() << id << Helper::Data::GetObjectType(Hash).value("Path").toString() << x << y;
             break;
         }
         default:
