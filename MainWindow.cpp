@@ -120,6 +120,11 @@ void MainWindow::on_actionPacketList_triggered()
 
         if (account->isRunning())
         {
+            QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+            // proxyModel->setFilterRegularExpression("021a");
+            // proxyModel->setFilterKeyColumn(3); // Data
+            // proxyModel->setSourceModel(&account->m_ExileGame->m_PacketListModel);
+
             m_PacketView.setModel(&account->m_ExileGame->m_PacketListModel);
             m_PacketView.show();
         }

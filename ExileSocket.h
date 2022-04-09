@@ -44,7 +44,7 @@ public:
 
     qint64 writeId(quint16 packetId, QString packetName = QString())
     {
-        m_PacketListModel.m_PacketList.append(new Packet);
+        m_PacketListModel.append();
         m_PacketListModel.m_PacketList.last()->m_PacketType = "send";
         m_PacketListModel.m_PacketList.last()->m_PacketName = packetName;
 
@@ -65,7 +65,7 @@ public:
 
     quint16 readId()
     {
-        m_PacketListModel.m_PacketList.append(new Packet);
+        m_PacketListModel.append();
         m_PacketListModel.m_PacketList.last()->m_PacketType = "recv";
         return this->read<quint16>("PacketId");
     }

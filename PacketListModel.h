@@ -104,6 +104,12 @@ public:
     {
         m_PacketList.last()->m_Fields.append(
             new PacketField(type, name, data, m_PacketList.last()));
-        layoutChanged();
+    }
+
+    void append()
+    {
+        beginInsertRows(QModelIndex(), m_PacketList.size(), m_PacketList.size());
+        m_PacketList.append(new Packet);
+        endInsertRows();
     }
 };
