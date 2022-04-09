@@ -70,6 +70,91 @@ public:
         return this->read<quint16>("PacketId");
     }
 
+    // 无符号
+    quint32 ReadVarint(QString name = QString())
+    {
+        quint8 v = this->read<quint8>();
+
+        if ((v & 0x80) == 0)
+        {
+            return v;
+        }
+
+        if ((v & 0xC0) == 0x80)
+        {
+            return this->read<quint8>(name) | (v & 0x3f) << 8;
+        }
+        else if ((v & 0xE0) == 0xC0)
+        {
+            quint8 v1 = this->read<quint8>(name);
+            quint8 v2 = this->read<quint8>(name);
+            return v2 | v1 << 8 | (v & 0x1f) << (8 * 2);
+        }
+        else if ((v & 0xF0) == 0xE0)
+        {
+            quint8 v1 = this->read<quint8>(name);
+            quint8 v2 = this->read<quint8>(name);
+            quint8 v3 = this->read<quint8>(name);
+
+            return v3 | v2 << 8 | v1 << (8 * 2) | (v & 0xf) << (8 * 3);
+        }
+        else
+        {
+            quint8 v1 = this->read<quint8>(name);
+            quint8 v2 = this->read<quint8>(name);
+            quint8 v3 = this->read<quint8>(name);
+            quint8 v4 = this->read<quint8>(name);
+            return v4 | v3 << 8 | v2 << (8 * 2) | v1 << (8 * 3);
+        }
+    }
+
+    // 有符号
+    qint32 ReadVarint1(QString name = QString())
+    {
+        quint8 v = this->read<quint8>();
+
+        if ((v & 0x80) == 0)
+        {
+            if ((v & 0x40) == 0)
+            {
+                return v;
+            }
+            else
+            {
+                return v | 0xffffff80;
+            }
+        }
+
+        if ((v & 0xC0) == 0x80)
+        {
+            return this->read<quint8>(name) | (v & 0x3f) << 8;
+        }
+        else if ((v & 0xE0) == 0xC0)
+        {
+            quint8 v1 = this->read<quint8>(name);
+            quint8 v2 = this->read<quint8>(name);
+            return v2 | v1 << 8 | (v & 0x1f) << (8 * 2);
+        }
+        else if ((v & 0xF0) == 0xE0)
+        {
+            quint8 v1 = this->read<quint8>(name);
+            quint8 v2 = this->read<quint8>(name);
+            quint8 v3 = this->read<quint8>(name);
+
+            qint64 result = v3 | v2 << 8 | v1 << (8 * 2) | (v & 0xf) << (8 * 3);
+            result = v & 8 ? result : result | 0xF0000000;
+            return result;
+        }
+        else
+        {
+            quint8 v1 = this->read<quint8>(name);
+            quint8 v2 = this->read<quint8>(name);
+            quint8 v3 = this->read<quint8>(name);
+            quint8 v4 = this->read<quint8>(name);
+            return v4 | v3 << 8 | v2 << (8 * 2) | v1 << (8 * 3);
+        }
+    }
+
 public slots:
     void on_socket_disconnected() { isCrypto = false; }
 };

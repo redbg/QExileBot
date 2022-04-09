@@ -2,6 +2,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsTextItem>
 #include <QGraphicsPixmapItem>
+#include "GameObject.h"
 
 class GameObjectScene : public QGraphicsScene
 {
@@ -55,6 +56,19 @@ public:
     {
         m_PlayerId = PlayerId;
         RefreshText();
+    }
+
+    void SetPositioned(quint32 id, qint32 x, qint32 y)
+    {
+        for (size_t i = 0; i < this->items().size(); i++)
+        {
+            GameObject *obj = dynamic_cast<GameObject *>(this->items().at(i));
+
+            if (obj && obj->m_Id == id)
+            {
+                obj->setPos(x, y);
+            }
+        }
     }
 
     QImage GetTerrain()

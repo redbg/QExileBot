@@ -326,6 +326,30 @@ void ExileGame::on_game_readyRead()
             }
             break;
         }
+        case 0x148:
+        {
+            // 释放技能
+            quint32 id = this->read<quint32>(); // GameObjectId
+            this->read<quint32>();
+            this->read<quint16>();
+
+            quint16 v4 = this->read<quint16>();
+            if ((v4 & 0x80) != 0)
+            {
+                this->read<quint32>();
+            }
+
+            qint32 currentX = this->ReadVarint1("currentX");
+            qint32 currentY = this->ReadVarint1("currentY");
+            qint32 targetX = this->ReadVarint1("targetX");
+            qint32 targetY = this->ReadVarint1("targetY");
+
+            this->read<quint16>("Skill_Id");
+            this->read<quint16>();
+
+            m_Scene.SetPositioned(id, currentX, currentY);
+            break;
+        }
         case 0x1a9:
         {
             this->read<quint8>();
@@ -387,69 +411,8 @@ void ExileGame::on_game_readyRead()
 
             quint32 Hash = this->read<quint32>("Hash");                    // GameObjectHashId
             QByteArray ComponentsData = this->read(this->read<quint16>()); // Components Data
-            QDataStream DataStream(ComponentsData);
 
-            // Head
-            this->readData<quint8>(DataStream);
-
-            quint8 size = this->readData<quint8>(DataStream);
-
-            for (size_t i = 0; i < size; i++)
-            {
-                this->readData<quint32>(DataStream);
-                quint8 v17 = this->readData<quint8>(DataStream);
-                this->readData<quint8>(DataStream);
-
-                quint8 v21 = this->readData<quint8>(DataStream);
-
-                switch (v21)
-                {
-                case 1:
-                case 4:
-                case 5:
-                    for (quint8 i = 0; i < v17; i++)
-                    {
-                        this->readData<quint32>(DataStream);
-                    }
-                    break;
-                case 3:
-                    for (quint8 i = 0; i < v17; i++)
-                    {
-                        this->readData<quint32>(DataStream);
-                        this->readData<quint32>(DataStream);
-                    }
-                    break;
-                case 6:
-                    for (quint8 i = 0; i < v17; i++)
-                    {
-                        this->readData<quint8>(DataStream);
-                    }
-                    break;
-                case 7:
-                    for (quint8 i = 0; i < v17; i++)
-                    {
-                        quint32 size = this->readData<quint32>(DataStream);
-                        this->readData(DataStream, size);
-                    }
-                    break;
-                default:
-                    break;
-                }
-            }
-
-            // Positioned
-            quint32 x = this->readData<quint32>(DataStream);
-            quint32 y = this->readData<quint32>(DataStream);
-
-            QString Path = Helper::Data::GetObjectType(Hash).value("Path").toString();
-            qDebug() << id << Path << x << y;
-
-
-            QGraphicsTextItem *TextItem = m_Scene.addText(QString::number(id));
-            TextItem->setPos(x, y);
-            TextItem->setDefaultTextColor(Qt::green);
-
-            // m_Scene.addEllipse(x, y, 1, 1, QPen(Qt::green));
+            m_Scene.addItem(new GameObject(id, Hash, ComponentsData));
             break;
         }
         default:
