@@ -2,6 +2,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsTextItem>
 #include <QGraphicsPixmapItem>
+#include <QGraphicsSceneMouseEvent>
 #include "GameObject.h"
 
 class GameObjectScene : public QGraphicsScene
@@ -105,4 +106,13 @@ public:
 
         return JsonObject;
     }
+
+protected:
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
+    {
+        emit move(mouseEvent->scenePos());
+    }
+
+signals:
+    void move(QPointF pos);
 };

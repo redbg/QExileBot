@@ -4,7 +4,7 @@
 
 namespace Global
 {
-    const static QString hostName = "dal01.login.pathofexile.com";
+    const static QString hostName = "sjc01.login.pathofexile.com";
     const static quint16 port = 20481;
 
     const static QString league = "Archnemesis";

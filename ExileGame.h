@@ -42,6 +42,10 @@ public:
         connect(this, &ExileSocket::disconnected, this, &ExileGame::on_game_disconnected, Qt::DirectConnection);
         connect(this, &ExileSocket::errorOccurred, this, &ExileGame::on_game_errorOccurred, Qt::DirectConnection);
         connect(this, &ExileSocket::readyRead, this, &ExileGame::on_game_readyRead, Qt::DirectConnection);
+
+        connect(
+            &m_Scene, &GameObjectScene::move, this, [=](QPointF pos)
+            { qDebug() << pos; this->SendSkill(pos.x(), pos.y(), 0x2909); });
     }
 
     virtual ~ExileGame() {}
@@ -92,6 +96,22 @@ public:
         this->writeId(0x53, "SendTileHash");
         this->write(tileHash);
         this->write(doodadHash);
+    }
+
+    void SendSkill(qint32 x, qint32 y, quint16 skill)
+    {
+        static quint16 count = 0;
+
+        this->writeId(0x18, "释放技能");
+
+        this->write<qint32>(x);
+        this->write<qint32>(y);
+
+        this->write<quint16>(skill);
+        this->write<quint16>(count);
+        this->write<quint16>(0x408);
+
+        count++;
     }
 
 public:
