@@ -73,7 +73,7 @@ public:
     // 无符号
     quint32 ReadVarint(QString name = QString())
     {
-        quint8 v = this->read<quint8>();
+        quint8 v = this->read<quint8>(name);
 
         if ((v & 0x80) == 0)
         {
@@ -111,7 +111,7 @@ public:
     // 有符号
     qint32 ReadVarint1(QString name = QString())
     {
-        quint8 v = this->read<quint8>();
+        quint8 v = this->read<quint8>(name);
 
         if ((v & 0x80) == 0)
         {

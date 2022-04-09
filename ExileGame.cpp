@@ -206,6 +206,39 @@ void ExileGame::on_game_readyRead()
             this->read<quint16>();
             break;
         }
+        case 0x6e:
+        {
+            this->readString();
+            this->readString();
+
+            quint8 v4 = this->read<quint8>();
+
+            if (v4 != 0)
+            {
+                this->readString();
+
+                this->read<quint8>();
+                this->read<quint8>();
+                this->read<quint16>();
+                this->read<quint16>();
+                this->read<quint16>();
+                this->read<quint16>();
+                this->read<quint8>();
+
+                this->readString();
+
+                this->read<quint8>();
+                this->read<quint16>();
+                this->read<quint8>();
+                this->read<quint8>();
+            }
+            else
+            {
+                this->read<quint64>();
+            }
+
+            break;
+        }
         case 0x84:
         {
             this->read<quint8>();
@@ -290,6 +323,13 @@ void ExileGame::on_game_readyRead()
             this->read<quint8>();
             break;
         }
+        case 0x8e:
+        {
+            this->read<quint8>();
+            this->readString();
+            this->readString();
+            break;
+        }
         case 0xe2:
         {
             this->read<quint16>();
@@ -348,6 +388,24 @@ void ExileGame::on_game_readyRead()
             this->read<quint16>();
 
             m_Scene.SetPositioned(id, currentX, currentY);
+            break;
+        }
+        case 0x15e:
+        {
+            this->ReadVarint();
+            this->read<quint16>();
+            break;
+        }
+        case 0x184:
+        {
+            this->read<quint32>();
+            this->read<quint32>();
+            this->read<quint32>();
+            this->read<quint32>();
+
+            this->read<quint64>();
+            this->read<quint8>();
+            this->read<quint32>();
             break;
         }
         case 0x1a9:
