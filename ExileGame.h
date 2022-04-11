@@ -10,6 +10,8 @@
 #include "GameObjectScene.h"
 #include "GameObject.h"
 #include <QGraphicsView>
+#include <QJSEngine>
+#include <QTimer>
 
 class ExileGame : public ExileSocket
 {
@@ -22,6 +24,9 @@ public:
     quint32 m_Ticket2;
 
     GameObjectScene m_Scene;
+
+    QJSEngine *m_JSEngine;
+    QTimer m_Tick;
 
 public:
     enum MSG_CLIENT : quint16
@@ -36,7 +41,7 @@ public:
 
 public:
     explicit ExileGame(QObject *parent = nullptr)
-        : ExileSocket(parent)
+        : ExileSocket(parent), m_JSEngine(new QJSEngine(this))
     {
         connect(this, &ExileSocket::connected, this, &ExileGame::on_game_connected, Qt::DirectConnection);
         connect(this, &ExileSocket::disconnected, this, &ExileGame::on_game_disconnected, Qt::DirectConnection);
@@ -46,6 +51,13 @@ public:
         connect(
             &m_Scene, &GameObjectScene::move, this, [=](QPointF pos)
             { qDebug() << pos; this->SendSkill(pos.x(), pos.y(), 0x2909, 0x408); });
+
+        m_JSEngine->installExtensions(QJSEngine::ConsoleExtension);
+        m_JSEngine->globalObject().setProperty("game", m_JSEngine->newQObject(this));
+        m_JSEngine->evaluate(Helper::File::ReadAll("script/script.js"), "script/script.js");
+        connect(&m_Tick, &QTimer::timeout, this, [=]()
+                { m_JSEngine->globalObject().property("tick").call(); });
+        m_Tick.start(100);
     }
 
     virtual ~ExileGame() {}
@@ -98,7 +110,7 @@ public:
         this->write(doodadHash);
     }
 
-    void SendSkill(qint32 x, qint32 y, quint16 skill, quint16 u)
+    Q_INVOKABLE void SendSkill(qint32 x, qint32 y, quint16 skill, quint16 u)
     {
         static quint16 count = 0;
 

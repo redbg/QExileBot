@@ -14,6 +14,7 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Network)
 find_package(Qt6 REQUIRED COMPONENTS WebEngineWidgets)
+find_package(Qt6 REQUIRED COMPONENTS Qml)
 
 add_executable(QExileBot
     main.cpp
@@ -57,6 +58,7 @@ add_executable(QExileBot
 target_link_libraries(QExileBot PRIVATE Qt6::Widgets)
 target_link_libraries(QExileBot PRIVATE Qt6::Network)
 target_link_libraries(QExileBot PRIVATE Qt6::WebEngineWidgets)
+target_link_libraries(QExileBot PRIVATE Qt6::Qml)
 
 # vcpkg
 include("D:/vcpkg/scripts/buildsystems/vcpkg.cmake")
