@@ -45,7 +45,7 @@ public:
 
         connect(
             &m_Scene, &GameObjectScene::move, this, [=](QPointF pos)
-            { qDebug() << pos; this->SendSkill(pos.x(), pos.y(), 0x2909); });
+            { qDebug() << pos; this->SendSkill(pos.x(), pos.y(), 0x2909, 0x408); });
     }
 
     virtual ~ExileGame() {}
@@ -98,7 +98,7 @@ public:
         this->write(doodadHash);
     }
 
-    void SendSkill(qint32 x, qint32 y, quint16 skill)
+    void SendSkill(qint32 x, qint32 y, quint16 skill, quint16 u)
     {
         static quint16 count = 0;
 
@@ -109,7 +109,7 @@ public:
 
         this->write<quint16>(skill);
         this->write<quint16>(count);
-        this->write<quint16>(0x408);
+        this->write<quint16>(u);
 
         count++;
     }

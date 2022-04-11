@@ -390,10 +390,67 @@ void ExileGame::on_game_readyRead()
             m_Scene.SetPositioned(id, currentX, currentY);
             break;
         }
+        case 0x149:
+        {
+            quint32 id = this->read<quint32>(); // GameObjectId
+            this->read<quint32>();
+            this->read<quint16>();
+            break;
+        }
+        case 0x150:
+        {
+            quint32 id = this->read<quint32>(); // GameObjectId
+            this->read<quint32>();
+            this->read<quint16>();
+
+            quint32 size = this->ReadVarint();
+
+            for (quint32 i = 0; i < size; i++)
+            {
+                this->ReadVarint();
+                this->ReadVarint1();
+            }
+
+            break;
+        }
+        case 0x151:
+        {
+            quint32 id = this->read<quint32>(); // GameObjectId
+            this->read<quint32>();
+            this->read<quint16>();
+
+            this->read<quint16>();
+
+            quint32 size = this->ReadVarint();
+
+            for (quint32 i = 0; i < size; i++)
+            {
+                this->ReadVarint();
+                this->ReadVarint1();
+            }
+
+            break;
+        }
+        case 0x153:
+        {
+            quint32 id = this->read<quint32>(); // GameObjectId
+            this->read<quint32>();
+            this->read<quint16>();
+
+            this->read<quint32>();
+            this->read<quint32>();
+            this->read<quint32>();
+            this->read<quint32>();
+            break;
+        }
         case 0x15e:
         {
-            this->ReadVarint();
+            quint32 id = this->read<quint32>(); // GameObjectId
+            this->read<quint32>();
             this->read<quint16>();
+
+            this->read<quint16>();
+
             break;
         }
         case 0x184:
@@ -463,7 +520,7 @@ void ExileGame::on_game_readyRead()
         }
         case 0x21e:
         {
-            quint32 id = this->read<quint32>(); // id
+            quint32 id = this->read<quint32>(); // GameObjectId
             this->read<quint32>();
             this->read<quint16>();
 
@@ -471,6 +528,23 @@ void ExileGame::on_game_readyRead()
             QByteArray ComponentsData = this->read(this->read<quint16>()); // Components Data
 
             m_Scene.addItem(new GameObject(id, Hash, ComponentsData));
+            break;
+        }
+        case 0x21f:
+        {
+            quint32 id = this->read<quint32>(); // GameObjectId
+            this->read<quint32>();
+            this->read<quint16>();
+
+            quint16 size = this->read<quint16>();
+            QByteArray data = this->read(size);
+            break;
+        }
+        case 0x220:
+        {
+            quint32 id = this->read<quint32>(); // GameObjectId
+            this->read<quint32>();
+            this->read<quint16>();
             break;
         }
         default:

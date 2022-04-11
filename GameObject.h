@@ -20,7 +20,7 @@ public:
         readPositioned(DataStream);
 
         m_MetadataId = Helper::Data::GetObjectType(Hash).value("Path").toString();
-        qDebug() << m_Id << m_MetadataId;
+        qDebug() << m_Id << Hash << m_MetadataId;
 
         this->setPlainText(QString::number(m_Id));
         this->setDefaultTextColor(Qt::green);
