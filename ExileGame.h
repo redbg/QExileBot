@@ -53,6 +53,7 @@ public:
             {
                 qDebug() << pos;
                 this->SendSkill(pos.x(), pos.y(), 0x2909, 0x408);
+                m_Scene.FindPath(pos);
             });
 
         m_JSEngine->installExtensions(QJSEngine::ConsoleExtension);

@@ -52,6 +52,11 @@ add_executable(QExileBot
     Helper.h
     Helper.cpp
 
+    AStar/astar.cpp
+    AStar/astar.h
+    AStar/blockallocator.cpp
+    AStar/blockallocator.h
+
     QExileBot.qrc
 )
 

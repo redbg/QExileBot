@@ -4,7 +4,8 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSceneMouseEvent>
 #include "GameObject.h"
-
+#include "AStar/astar.h"
+#include "AStar/blockallocator.h"
 
 class GameObjectScene : public QGraphicsScene
 {
@@ -31,6 +32,8 @@ public:
     QJsonObject m_Radar;
     QGraphicsPixmapItem m_TerrainItem;
     QGraphicsTextItem m_TextItem;
+
+    AStar::Params m_AStar;
 
     quint32 m_PlayerId;
 
@@ -83,6 +86,33 @@ public:
         }
 
         return nullptr;
+    }
+
+    void FindPath(QPointF end)
+    {
+        QPointF start = GetLocalPlayer()->pos();
+
+        m_AStar.width = m_TerrainWidth;
+        m_AStar.height = m_TerrainHeight;
+        m_AStar.corner = true;
+        m_AStar.can_pass = [&](const AStar::Vec2 &pos) -> bool
+        {
+            // qDebug() << pos.x << pos.y << m_TerrainData.at((pos.y * m_TerrainWidth) + pos.x + pos.y);
+            return m_TerrainData.at((pos.y * m_TerrainWidth) + pos.x + pos.y) > '1';
+        };
+
+        m_AStar.start = AStar::Vec2((uint16_t)start.x(), (uint16_t)start.y());
+        m_AStar.end = AStar::Vec2((uint16_t)end.x(), (uint16_t)end.y());
+
+        BlockAllocator allocator;
+        AStar algorithm(&allocator);
+        auto path = algorithm.find(m_AStar);
+
+        for (auto &pos : path)
+        {
+            // qDebug() << pos.x << pos.y;
+            this->addEllipse(pos.x, pos.y, 1, 1, QPen(Qt::green));
+        }
     }
 
     void SetPositioned(quint32 id, qint32 x, qint32 y)
