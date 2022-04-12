@@ -5,6 +5,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include "GameObject.h"
 
+
 class GameObjectScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -27,6 +28,7 @@ public:
     quint32 m_TerrainHeight;
     QByteArray m_TerrainData;
     QImage m_Terrain;
+    QJsonObject m_Radar;
     QGraphicsPixmapItem m_TerrainItem;
     QGraphicsTextItem m_TextItem;
 
@@ -44,6 +46,15 @@ public:
     {
         m_Terrain = GetTerrain();
         m_TerrainItem.setPixmap(QPixmap::fromImage(m_Terrain));
+
+        for (auto i = m_Radar.begin(); i != m_Radar.end(); i++)
+        {
+            QJsonObject j = m_Radar.value(i.key()).toObject();
+            QGraphicsTextItem *text = this->addText(i.key());
+            text->setPos(j.value("x").toInt() * 23, j.value("y").toInt() * 23);
+            text->setDefaultTextColor(Qt::red);
+        }
+
         RefreshText();
     }
 
@@ -57,6 +68,21 @@ public:
     {
         m_PlayerId = PlayerId;
         RefreshText();
+    }
+
+    GameObject *GetLocalPlayer()
+    {
+        for (size_t i = 0; i < this->items().size(); i++)
+        {
+            GameObject *obj = dynamic_cast<GameObject *>(this->items().at(i));
+
+            if (obj && obj->m_Id == m_PlayerId)
+            {
+                return obj;
+            }
+        }
+
+        return nullptr;
     }
 
     void SetPositioned(quint32 id, qint32 x, qint32 y)

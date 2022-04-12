@@ -91,6 +91,7 @@ void ExileGame::on_game_readyRead()
                         m_Scene.m_DoodadHash = reply->rawHeader("DoodadHash").toUInt();
                         m_Scene.m_TerrainWidth = reply->rawHeader("TerrainWidth").toUInt();
                         m_Scene.m_TerrainHeight = reply->rawHeader("TerrainHeight").toUInt();
+                        m_Scene.m_Radar = QJsonDocument::fromJson(reply->rawHeader("Radar")).object();
                         m_Scene.m_TerrainData = reply->readAll();
                         m_Scene.Refresh();
                         this->SendTileHash(m_Scene.m_TileHash, m_Scene.m_DoodadHash); // <<<<<<<<<< SendTileHash

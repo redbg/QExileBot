@@ -50,7 +50,10 @@ public:
 
         connect(
             &m_Scene, &GameObjectScene::move, this, [=](QPointF pos)
-            { qDebug() << pos; this->SendSkill(pos.x(), pos.y(), 0x2909, 0x408); });
+            {
+                qDebug() << pos;
+                this->SendSkill(pos.x(), pos.y(), 0x2909, 0x408);
+            });
 
         m_JSEngine->installExtensions(QJSEngine::ConsoleExtension);
         m_JSEngine->globalObject().setProperty("game", m_JSEngine->newQObject(this));
