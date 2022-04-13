@@ -96,7 +96,8 @@ void ExileGame::on_game_readyRead()
                         m_Scene.Refresh();
                         this->SendTileHash(m_Scene.m_TileHash, m_Scene.m_DoodadHash); // <<<<<<<<<< SendTileHash
                         reply->deleteLater();
-                        mgr->deleteLater(); });
+                        mgr->deleteLater();
+                    });
             break;
         }
         case 0x13:
@@ -311,11 +312,15 @@ void ExileGame::on_game_readyRead()
                     for (quint32 i = 0; i < size; i++)
                     {
                         this->read<quint32>("Index");
-                        this->read<quint8>("x"); // x
-                        this->read<quint8>("y"); // y
+                       quint8 y =  this->read<quint8>("x"); 
+                        quint8 x = this->read<quint8>("y"); 
 
                         // item info
-                        this->read(this->read<quint16>());
+                        QByteArray itemData = this->read(this->read<quint16>());
+                        Item* item = new Item(itemData); // 临时测试
+                        item->m_x = x;
+                        item->m_y = y;
+                        item->m_inventoryId = inventoryId;
                     }
                 }
             }

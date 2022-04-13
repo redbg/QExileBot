@@ -1,0 +1,602 @@
+[
+  {
+    "_rid": 0,
+    "Unknown1": "001",
+    "Level": 1,
+    "Experience": 0
+  },
+  {
+    "_rid": 1,
+    "Unknown1": "002",
+    "Level": 2,
+    "Experience": 525
+  },
+  {
+    "_rid": 2,
+    "Unknown1": "003",
+    "Level": 3,
+    "Experience": 1760
+  },
+  {
+    "_rid": 3,
+    "Unknown1": "004",
+    "Level": 4,
+    "Experience": 3781
+  },
+  {
+    "_rid": 4,
+    "Unknown1": "005",
+    "Level": 5,
+    "Experience": 7184
+  },
+  {
+    "_rid": 5,
+    "Unknown1": "006",
+    "Level": 6,
+    "Experience": 12186
+  },
+  {
+    "_rid": 6,
+    "Unknown1": "007",
+    "Level": 7,
+    "Experience": 19324
+  },
+  {
+    "_rid": 7,
+    "Unknown1": "008",
+    "Level": 8,
+    "Experience": 29377
+  },
+  {
+    "_rid": 8,
+    "Unknown1": "009",
+    "Level": 9,
+    "Experience": 43181
+  },
+  {
+    "_rid": 9,
+    "Unknown1": "010",
+    "Level": 10,
+    "Experience": 61693
+  },
+  {
+    "_rid": 10,
+    "Unknown1": "011",
+    "Level": 11,
+    "Experience": 85990
+  },
+  {
+    "_rid": 11,
+    "Unknown1": "012",
+    "Level": 12,
+    "Experience": 117506
+  },
+  {
+    "_rid": 12,
+    "Unknown1": "013",
+    "Level": 13,
+    "Experience": 157384
+  },
+  {
+    "_rid": 13,
+    "Unknown1": "014",
+    "Level": 14,
+    "Experience": 207736
+  },
+  {
+    "_rid": 14,
+    "Unknown1": "015",
+    "Level": 15,
+    "Experience": 269997
+  },
+  {
+    "_rid": 15,
+    "Unknown1": "016",
+    "Level": 16,
+    "Experience": 346462
+  },
+  {
+    "_rid": 16,
+    "Unknown1": "017",
+    "Level": 17,
+    "Experience": 439268
+  },
+  {
+    "_rid": 17,
+    "Unknown1": "018",
+    "Level": 18,
+    "Experience": 551295
+  },
+  {
+    "_rid": 18,
+    "Unknown1": "019",
+    "Level": 19,
+    "Experience": 685171
+  },
+  {
+    "_rid": 19,
+    "Unknown1": "020",
+    "Level": 20,
+    "Experience": 843709
+  },
+  {
+    "_rid": 20,
+    "Unknown1": "021",
+    "Level": 21,
+    "Experience": 1030734
+  },
+  {
+    "_rid": 21,
+    "Unknown1": "022",
+    "Level": 22,
+    "Experience": 1249629
+  },
+  {
+    "_rid": 22,
+    "Unknown1": "023",
+    "Level": 23,
+    "Experience": 1504995
+  },
+  {
+    "_rid": 23,
+    "Unknown1": "024",
+    "Level": 24,
+    "Experience": 1800847
+  },
+  {
+    "_rid": 24,
+    "Unknown1": "025",
+    "Level": 25,
+    "Experience": 2142652
+  },
+  {
+    "_rid": 25,
+    "Unknown1": "026",
+    "Level": 26,
+    "Experience": 2535122
+  },
+  {
+    "_rid": 26,
+    "Unknown1": "027",
+    "Level": 27,
+    "Experience": 2984677
+  },
+  {
+    "_rid": 27,
+    "Unknown1": "028",
+    "Level": 28,
+    "Experience": 3496798
+  },
+  {
+    "_rid": 28,
+    "Unknown1": "029",
+    "Level": 29,
+    "Experience": 4080655
+  },
+  {
+    "_rid": 29,
+    "Unknown1": "030",
+    "Level": 30,
+    "Experience": 4742836
+  },
+  {
+    "_rid": 30,
+    "Unknown1": "031",
+    "Level": 31,
+    "Experience": 5490247
+  },
+  {
+    "_rid": 31,
+    "Unknown1": "032",
+    "Level": 32,
+    "Experience": 6334393
+  },
+  {
+    "_rid": 32,
+    "Unknown1": "033",
+    "Level": 33,
+    "Experience": 7283446
+  },
+  {
+    "_rid": 33,
+    "Unknown1": "034",
+    "Level": 34,
+    "Experience": 8348398
+  },
+  {
+    "_rid": 34,
+    "Unknown1": "035",
+    "Level": 35,
+    "Experience": 9541110
+  },
+  {
+    "_rid": 35,
+    "Unknown1": "036",
+    "Level": 36,
+    "Experience": 10874351
+  },
+  {
+    "_rid": 36,
+    "Unknown1": "037",
+    "Level": 37,
+    "Experience": 12361842
+  },
+  {
+    "_rid": 37,
+    "Unknown1": "038",
+    "Level": 38,
+    "Experience": 14018289
+  },
+  {
+    "_rid": 38,
+    "Unknown1": "039",
+    "Level": 39,
+    "Experience": 15859432
+  },
+  {
+    "_rid": 39,
+    "Unknown1": "040",
+    "Level": 40,
+    "Experience": 17905634
+  },
+  {
+    "_rid": 40,
+    "Unknown1": "041",
+    "Level": 41,
+    "Experience": 20171471
+  },
+  {
+    "_rid": 41,
+    "Unknown1": "042",
+    "Level": 42,
+    "Experience": 22679999
+  },
+  {
+    "_rid": 42,
+    "Unknown1": "043",
+    "Level": 43,
+    "Experience": 25456123
+  },
+  {
+    "_rid": 43,
+    "Unknown1": "044",
+    "Level": 44,
+    "Experience": 28517857
+  },
+  {
+    "_rid": 44,
+    "Unknown1": "045",
+    "Level": 45,
+    "Experience": 31897771
+  },
+  {
+    "_rid": 45,
+    "Unknown1": "046",
+    "Level": 46,
+    "Experience": 35621447
+  },
+  {
+    "_rid": 46,
+    "Unknown1": "047",
+    "Level": 47,
+    "Experience": 39721017
+  },
+  {
+    "_rid": 47,
+    "Unknown1": "048",
+    "Level": 48,
+    "Experience": 44225461
+  },
+  {
+    "_rid": 48,
+    "Unknown1": "049",
+    "Level": 49,
+    "Experience": 49176560
+  },
+  {
+    "_rid": 49,
+    "Unknown1": "050",
+    "Level": 50,
+    "Experience": 54607467
+  },
+  {
+    "_rid": 50,
+    "Unknown1": "051",
+    "Level": 51,
+    "Experience": 60565335
+  },
+  {
+    "_rid": 51,
+    "Unknown1": "052",
+    "Level": 52,
+    "Experience": 67094245
+  },
+  {
+    "_rid": 52,
+    "Unknown1": "053",
+    "Level": 53,
+    "Experience": 74247659
+  },
+  {
+    "_rid": 53,
+    "Unknown1": "054",
+    "Level": 54,
+    "Experience": 82075627
+  },
+  {
+    "_rid": 54,
+    "Unknown1": "055",
+    "Level": 55,
+    "Experience": 90631041
+  },
+  {
+    "_rid": 55,
+    "Unknown1": "056",
+    "Level": 56,
+    "Experience": 99984974
+  },
+  {
+    "_rid": 56,
+    "Unknown1": "057",
+    "Level": 57,
+    "Experience": 110197515
+  },
+  {
+    "_rid": 57,
+    "Unknown1": "058",
+    "Level": 58,
+    "Experience": 121340161
+  },
+  {
+    "_rid": 58,
+    "Unknown1": "059",
+    "Level": 59,
+    "Experience": 133497202
+  },
+  {
+    "_rid": 59,
+    "Unknown1": "060",
+    "Level": 60,
+    "Experience": 146749362
+  },
+  {
+    "_rid": 60,
+    "Unknown1": "061",
+    "Level": 61,
+    "Experience": 161191120
+  },
+  {
+    "_rid": 61,
+    "Unknown1": "062",
+    "Level": 62,
+    "Experience": 176922628
+  },
+  {
+    "_rid": 62,
+    "Unknown1": "063",
+    "Level": 63,
+    "Experience": 194049893
+  },
+  {
+    "_rid": 63,
+    "Unknown1": "064",
+    "Level": 64,
+    "Experience": 212684946
+  },
+  {
+    "_rid": 64,
+    "Unknown1": "065",
+    "Level": 65,
+    "Experience": 232956711
+  },
+  {
+    "_rid": 65,
+    "Unknown1": "066",
+    "Level": 66,
+    "Experience": 255001620
+  },
+  {
+    "_rid": 66,
+    "Unknown1": "067",
+    "Level": 67,
+    "Experience": 278952403
+  },
+  {
+    "_rid": 67,
+    "Unknown1": "068",
+    "Level": 68,
+    "Experience": 304972236
+  },
+  {
+    "_rid": 68,
+    "Unknown1": "069",
+    "Level": 69,
+    "Experience": 333233648
+  },
+  {
+    "_rid": 69,
+    "Unknown1": "070",
+    "Level": 70,
+    "Experience": 363906163
+  },
+  {
+    "_rid": 70,
+    "Unknown1": "071",
+    "Level": 71,
+    "Experience": 397194041
+  },
+  {
+    "_rid": 71,
+    "Unknown1": "072",
+    "Level": 72,
+    "Experience": 433312945
+  },
+  {
+    "_rid": 72,
+    "Unknown1": "073",
+    "Level": 73,
+    "Experience": 472476370
+  },
+  {
+    "_rid": 73,
+    "Unknown1": "074",
+    "Level": 74,
+    "Experience": 514937180
+  },
+  {
+    "_rid": 74,
+    "Unknown1": "075",
+    "Level": 75,
+    "Experience": 560961898
+  },
+  {
+    "_rid": 75,
+    "Unknown1": "076",
+    "Level": 76,
+    "Experience": 610815862
+  },
+  {
+    "_rid": 76,
+    "Unknown1": "077",
+    "Level": 77,
+    "Experience": 664824416
+  },
+  {
+    "_rid": 77,
+    "Unknown1": "078",
+    "Level": 78,
+    "Experience": 723298169
+  },
+  {
+    "_rid": 78,
+    "Unknown1": "079",
+    "Level": 79,
+    "Experience": 786612664
+  },
+  {
+    "_rid": 79,
+    "Unknown1": "080",
+    "Level": 80,
+    "Experience": 855129128
+  },
+  {
+    "_rid": 80,
+    "Unknown1": "081",
+    "Level": 81,
+    "Experience": 929261318
+  },
+  {
+    "_rid": 81,
+    "Unknown1": "082",
+    "Level": 82,
+    "Experience": 1009443795
+  },
+  {
+    "_rid": 82,
+    "Unknown1": "083",
+    "Level": 83,
+    "Experience": 1096169525
+  },
+  {
+    "_rid": 83,
+    "Unknown1": "084",
+    "Level": 84,
+    "Experience": 1189918242
+  },
+  {
+    "_rid": 84,
+    "Unknown1": "085",
+    "Level": 85,
+    "Experience": 1291270350
+  },
+  {
+    "_rid": 85,
+    "Unknown1": "086",
+    "Level": 86,
+    "Experience": 1400795257
+  },
+  {
+    "_rid": 86,
+    "Unknown1": "087",
+    "Level": 87,
+    "Experience": 1519130326
+  },
+  {
+    "_rid": 87,
+    "Unknown1": "088",
+    "Level": 88,
+    "Experience": 1646943474
+  },
+  {
+    "_rid": 88,
+    "Unknown1": "089",
+    "Level": 89,
+    "Experience": 1784977296
+  },
+  {
+    "_rid": 89,
+    "Unknown1": "090",
+    "Level": 90,
+    "Experience": 1934009687
+  },
+  {
+    "_rid": 90,
+    "Unknown1": "091",
+    "Level": 91,
+    "Experience": 2094900291
+  },
+  {
+    "_rid": 91,
+    "Unknown1": "092",
+    "Level": 92,
+    "Experience": -2026418210
+  },
+  {
+    "_rid": 92,
+    "Unknown1": "093",
+    "Level": 93,
+    "Experience": -1839046040
+  },
+  {
+    "_rid": 93,
+    "Unknown1": "094",
+    "Level": 94,
+    "Experience": -1636892304
+  },
+  {
+    "_rid": 94,
+    "Unknown1": "095",
+    "Level": 95,
+    "Experience": -1418850395
+  },
+  {
+    "_rid": 95,
+    "Unknown1": "096",
+    "Level": 96,
+    "Experience": -1183686996
+  },
+  {
+    "_rid": 96,
+    "Unknown1": "097",
+    "Level": 97,
+    "Experience": -930139134
+  },
+  {
+    "_rid": 97,
+    "Unknown1": "098",
+    "Level": 98,
+    "Experience": -656780602
+  },
+  {
+    "_rid": 98,
+    "Unknown1": "099",
+    "Level": 99,
+    "Experience": -362148766
+  },
+  {
+    "_rid": 99,
+    "Unknown1": "100",
+    "Level": 100,
+    "Experience": -44632852
+  }
+]

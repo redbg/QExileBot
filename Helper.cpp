@@ -1,4 +1,5 @@
 #include "Helper.h"
+#include <QMap>
 
 namespace Helper
 {
@@ -35,6 +36,13 @@ namespace Helper
             QJsonDocument JsonDocument = QJsonDocument::fromJson(Helper::File::ReadAll(fileName));
             Q_ASSERT(JsonDocument.isArray() != false);
             return JsonDocument.array();
+        }
+
+        QJsonObject GetJsonObj(QString fileName)
+        {
+            QJsonDocument JsonDocument = QJsonDocument::fromJson(Helper::File::ReadAll(fileName));
+            Q_ASSERT(!JsonDocument.isEmpty());
+            return JsonDocument.object();
         }
 
         QJsonObject GetBackendError(quint16 index)
@@ -80,5 +88,40 @@ namespace Helper
 
             return QJsonObject();
         }
+
+        QJsonObject GetBaseItemType(quint32 Hash)
+        {
+            static QJsonArray JsonArray = GetDataArray(":/Data/BaseItemTypes.json");
+
+            for (int i = 0; i < JsonArray.size(); i++)
+            {
+                if (JsonArray.at(i).toObject().value("HASH").toInteger() == Hash)
+                {
+                    return JsonArray.at(i).toObject();
+                }
+            }
+
+            return QJsonObject();
+        }
+
+        QJsonArray GetItemComponent(QString InheritsFrom)
+        {
+            static QJsonObject JsonObj = GetJsonObj(":/Data/itemCompenent.json");
+            return JsonObj[InheritsFrom].toArray();
+        }
+
+        QJsonObject GetMods(quint16 HASH16)
+        {
+            static QJsonArray JsonArray = GetDataArray(":/Data/Mods.json");
+            for (int i = 0; i < JsonArray.size(); i++)
+            {
+                if (JsonArray.at(i).toObject().value("HASH16").toInteger() == HASH16)
+                {
+                    return JsonArray.at(i).toObject();
+                }
+            }
+            return QJsonObject();
+        }
     };
+
 };

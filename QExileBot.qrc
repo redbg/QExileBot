@@ -5,5 +5,8 @@
         <file>Data/Characters.json</file>
         <file>Data/Inventories.json</file>
         <file>Data/ObjectTypes.json</file>
+        <file>Data/BaseItemTypes.json</file>
+        <file>Data/itemCompenent.json</file>
+         <file>Data/Mods.json</file>
     </qresource>
 </RCC>

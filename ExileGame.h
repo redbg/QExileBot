@@ -12,6 +12,7 @@
 #include <QGraphicsView>
 #include <QJSEngine>
 #include <QTimer>
+#include "Item.h"
 
 class ExileGame : public ExileSocket
 {
