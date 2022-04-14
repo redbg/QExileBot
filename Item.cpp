@@ -318,7 +318,7 @@ Q_INVOKABLE void Item::Sockets()
 
         for (size_t i = 0; i < v35; i++)
         {
-            readData<quint8>();
+            m_socketLinkNumber = readData<quint8>();
         }
     }
 }

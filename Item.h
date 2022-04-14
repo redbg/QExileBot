@@ -33,6 +33,9 @@ public:
     quint16 m_maxStackSize;
     //SkillGem
     quint32 m_Experience; //宝石经验
+    //Sockets
+    quint8 m_socketNumber;//插槽数量
+    quint8 m_socketLinkNumber; //插槽链接数量
 
     quint16 m_requirements_Level; //需求等级
     quint16 m_requirements_Str;   //需求力量
@@ -41,7 +44,7 @@ public:
     QString m_InheritsFrom;       //继承类
     QString m_baseTypeName;
     bool m_identified;       //是否鉴定
-    char colour;             //物品颜色
+    char colour;             //颜色
     QList<Item *> m_sockets; //插槽数组
 
     QJsonValue toJson()
