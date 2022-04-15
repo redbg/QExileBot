@@ -22,10 +22,13 @@ namespace Helper
         QJsonObject GetCharacter(quint8 ClassId);
         QJsonObject GetInventorie(quint32 InventoryId);
         QJsonObject GetObjectType(quint32 Hash);
-        QJsonObject GetBaseItemType(quint32 Hash);
+        QJsonObject GetBaseItemType(qint32 Hash);
         QJsonArray GetItemComponent(QString InheritsFrom);
-        //根据HASH16取对象
         QJsonObject GetMods(quint16 HASH16);
+        QJsonObject GetStat(quint16 _rid);
+        QJsonObject GetComponentAttributeRequirement(QString itemTypeId);
+        QJsonObject GetArmourType(quint64 BaseItemTypesKey);
+        QJsonObject GetWeaponType(quint64 BaseItemTypesKey);
     };
 
     namespace DataHelper

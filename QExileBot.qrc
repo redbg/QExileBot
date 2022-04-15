@@ -7,6 +7,10 @@
         <file>Data/ObjectTypes.json</file>
         <file>Data/BaseItemTypes.json</file>
         <file>Data/itemCompenent.json</file>
-         <file>Data/Mods.json</file>
+        <file>Data/Mods.json</file>
+        <file>Data/Stats.json</file>
+        <file>Data/ComponentAttributeRequirements.json</file>
+        <file>Data/ArmourTypes.json</file>
+        <file>Data/WeaponTypes.json</file>
     </qresource>
 </RCC>

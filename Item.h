@@ -4,6 +4,7 @@
 #include "Helper.h"
 #include <QList>
 #include <QMetaProperty>
+
 class Item : public QObject
 {
     Q_OBJECT
@@ -12,79 +13,109 @@ class Item : public QObject
 
 private:
 public:
-    Item(QByteArray ItemData);
+    Item(QDataStream &ItemData, int inventoryId = 0, int x = 0, int y = 0);
     Item(QDataStream *ItemData);
 
-    ~Item()
-    {
-        if (m_DataStream != nullptr)
-        {
-            delete m_DataStream;
-            m_DataStream = nullptr;
-        }
-    }
+    ~Item() {}
 
 public:
+    // 基础信息
+    int m_inventoryId;
     int m_x;
     int m_y;
-    int m_inventoryId;
-    //Stack
-    quint16 m_stackSize;
-    quint16 m_maxStackSize;
-    //SkillGem
-    quint32 m_Experience; //宝石经验
-    //Sockets
-    quint8 m_socketNumber;//插槽数量
-    quint8 m_socketLinkNumber; //插槽链接数量
+    QJsonObject m_BaseItemType;
+    QJsonObject m_Components;
 
-    quint16 m_requirements_Level; //需求等级
-    quint16 m_requirements_Str;   //需求力量
-    quint16 m_requirements_Dex;   //需求敏捷
-    quint16 m_requirements_Int;   //需求法力
-    QString m_InheritsFrom;       //继承类
-    QString m_baseTypeName;
-    bool m_identified;       //是否鉴定
-    char colour;             //颜色
-    QList<Item *> m_sockets; //插槽数组
+    QJsonObject m_Base;
+    // Stack
+    QJsonObject m_Stack;
+    // quint16 m_stackSize;
 
-    QJsonValue toJson()
+    // SkillGem
+    QJsonObject m_SkillGem;
+    // quint32 m_Experience; // 宝石经验
+
+    // Sockets
+    QJsonObject m_Sockets;
+    // quint8 m_socketNumber;         // 插槽数量
+    // QList<quint8> m_sockets;       // 插槽信息
+    // QList<Item *> m_socketedItems; // 插槽物品数组
+    // QList<quint8> m_socketLinks;   // 插槽链接信息
+
+    // Mods
+    QJsonObject m_Mods;
+    // quint8 m_level;            // 装备等级
+    // bool m_identified;         // 是否鉴定
+    // quint8 m_frameType;        // 装备颜色
+    // QJsonArray m_implicitMods; // 固定的词缀
+    // QJsonArray m_explicitMods; // 基础词缀
+    // QJsonArray m_enchantMods;  // 附魔词缀(涂油-花园)
+    // QJsonArray m_craftedMods;  // 手工附魔词缀(工艺台)
+
+    // Quality
+    QJsonObject m_Quality;
+
+    // Armour
+    QJsonObject m_Armour;
+    quint8 m_armourQuality;
+    QJsonObject m_ArmourType; // 防具基础属性
+
+    // Weapon
+    QJsonObject m_Weapon;
+    QJsonObject m_WeaponType; // 武器基础属性
+
+    // AttributeRequirements
+    QJsonObject m_AttributeRequirements;
+
+    QJsonObject m_Charges;
+    QJsonObject m_HeistBlueprint;
+    QJsonObject m_Map;
+    QJsonObject m_HeistContract;
+
+    QJsonObject m_HeistEquipment;
+    QJsonObject m_Usable;
+    QJsonObject m_Flask;
+    QJsonObject m_LocalStats;
+    QJsonObject m_Shield;
+    QJsonObject m_Quest;
+
+    QJsonObject toJson()
     {
         QJsonObject JsonObject;
 
-        for (int i = 0; i < this->metaObject()->propertyCount(); i++)
-        {
-            const char *name = this->metaObject()->property(i).name();
-            JsonObject.insert(name, QJsonValue::fromVariant(this->property(name)));
-        }
+        JsonObject.insert("Components", m_Components);
+        JsonObject.insert("BaseItemType", m_BaseItemType);
 
         return JsonObject;
     }
 
 public:
     //解包组件
-    Q_INVOKABLE void Base();
-    Q_INVOKABLE void AlternateQualityTypes();
-    Q_INVOKABLE void Mods();
-    Q_INVOKABLE void HeistEquipment(){};
-    Q_INVOKABLE void Usable(){};
-    Q_INVOKABLE void Flask(){};
-    Q_INVOKABLE void Stack();
-    Q_INVOKABLE void HeistContract();
-    Q_INVOKABLE void Map();
-    Q_INVOKABLE void HeistBlueprint();
-    Q_INVOKABLE void Quality();
-    Q_INVOKABLE void LocalStats(){};
-    Q_INVOKABLE void Shield(){};
-    Q_INVOKABLE void Weapon(){};
-    Q_INVOKABLE void AttributeRequirements(){};
-    Q_INVOKABLE void Charges();
-    Q_INVOKABLE void Armour();
-    Q_INVOKABLE void Sockets();
-    Q_INVOKABLE void SkillGem();
+    Q_INVOKABLE QJsonObject *Base();
+    Q_INVOKABLE QJsonObject *Mods();
+    Q_INVOKABLE QJsonObject *HeistEquipment() { return &m_HeistEquipment; };
+    Q_INVOKABLE QJsonObject *Usable() { return &m_Usable; };
+    Q_INVOKABLE QJsonObject *Flask() { return &m_Flask; };
+    Q_INVOKABLE QJsonObject *Stack();
+    Q_INVOKABLE QJsonObject *HeistContract();
+    Q_INVOKABLE QJsonObject *Map();
+    Q_INVOKABLE QJsonObject *HeistBlueprint();
+    Q_INVOKABLE QJsonObject *Quality();
+    Q_INVOKABLE QJsonObject *LocalStats() { return &m_LocalStats; };
+    Q_INVOKABLE QJsonObject *Shield() { return &m_Shield; };
+    Q_INVOKABLE QJsonObject *Armour();
+    Q_INVOKABLE QJsonObject *Weapon();
+    Q_INVOKABLE QJsonObject *AttributeRequirements();
+    Q_INVOKABLE QJsonObject *Charges();
+    Q_INVOKABLE QJsonObject *Sockets();
+    Q_INVOKABLE QJsonObject *SkillGem();
+    Q_INVOKABLE QJsonObject *Quest() { return &m_Quest; }
 
     //
-    void fs_ItemTypeRegister_Mods();
+    void AlternateQualityTypes();
+    QJsonObject fs_ItemTypeRegister_Mods();
     void HeistJobs();
+
     template <typename T>
     T readData()
     {
