@@ -63,6 +63,12 @@ add_executable(QExileBot
     QExileBot.qrc
 )
 
+if (MSVC AND WIN32 AND NOT MSVC_VERSION VERSION_LESS 142)
+    target_link_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:/INCREMENTAL>)
+    target_compile_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:/ZI>)
+endif()
+
+
 target_link_libraries(QExileBot PRIVATE Qt6::Widgets)
 target_link_libraries(QExileBot PRIVATE Qt6::Network)
 target_link_libraries(QExileBot PRIVATE Qt6::WebEngineWidgets)
