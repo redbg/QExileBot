@@ -3,14 +3,7 @@
 #define HIBYTE(v) (v >> 8) & 0xff
 
 Item::Item(QDataStream &ItemData, int inventoryId, int x, int y)
-	: m_DataStream(&ItemData),
-	  m_inventoryId(inventoryId), m_x(x), m_y(y)
-{
-	Item::Item(&ItemData);
-}
-
-Item::Item(QDataStream *ItemData)
-	: m_DataStream(ItemData)
+	: m_DataStream(&ItemData), m_inventoryId(inventoryId), m_x(x), m_y(y)
 {
 	// Hash
 	qint32 Hash = readData<qint32>();
@@ -38,11 +31,11 @@ Item::Item(QDataStream *ItemData)
 										 Qt::DirectConnection,
 										 Q_RETURN_ARG(QJsonObject *, temp));
 
+		m_Components.insert(v.toString(), *temp);
+
 		if (temp != nullptr && !(temp->isEmpty()))
 		{
-			qDebug() << "------------" << *temp;
-
-			m_Components.insert(v.toString(), *temp);
+			qDebug() << "===========" << *temp;
 		}
 	}
 }
@@ -100,7 +93,7 @@ QJsonObject *Item::Base()
 
 	if ((v22 & 0x40) != 0)
 	{
-		Item(this->m_DataStream);
+		Item(*this->m_DataStream);
 	}
 	if ((v22 & 0x80) != 0)
 	{
@@ -247,7 +240,7 @@ QJsonObject *Item::Sockets()
 
 			if (socketInfo & 1)
 			{
-				socketItems.append(Item(m_DataStream).toJson());
+				socketItems.append(Item(*m_DataStream).toJson());
 			}
 		}
 

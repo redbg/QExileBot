@@ -14,8 +14,6 @@ class Item : public QObject
 private:
 public:
     Item(QDataStream &ItemData, int inventoryId = 0, int x = 0, int y = 0);
-    Item(QDataStream *ItemData);
-
     ~Item() {}
 
 public:

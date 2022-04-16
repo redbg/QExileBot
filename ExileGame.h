@@ -17,6 +17,7 @@
 class ExileGame : public ExileSocket
 {
     Q_OBJECT
+    Q_PROPERTY(QJSValue items READ GetItems)
 
 public:
     ExileClient *m_ExileClient;
@@ -25,6 +26,7 @@ public:
     quint32 m_Ticket2;
 
     GameObjectScene m_Scene;
+    QJsonArray m_Items;
 
     QJSEngine *m_JSEngine;
     QTimer m_Tick;
@@ -59,13 +61,22 @@ public:
 
         m_JSEngine->installExtensions(QJSEngine::ConsoleExtension);
         m_JSEngine->globalObject().setProperty("game", m_JSEngine->newQObject(this));
-        m_JSEngine->evaluate(Helper::File::ReadAll("script/script.js"), "script/script.js");
+        m_JSEngine->evaluate(Helper::File::ReadAll(":/script/script.js"),
+                             ":/script/script.js");
+
         connect(&m_Tick, &QTimer::timeout, this, [=]()
                 { m_JSEngine->globalObject().property("tick").call(); });
-        m_Tick.start(100);
+
+        m_Tick.start(1000);
     }
 
     virtual ~ExileGame() {}
+
+    QJSValue GetItems()
+    {
+        QJSValue items(QJsonDocument(m_Items).toJson().data());
+        return items;
+    }
 
 public slots:
     void connectToGameServer(quint32 Ticket1, quint32 WorldAreaId, quint32 Ticket2, quint16 Port, quint32 Address, QByteArray Key);

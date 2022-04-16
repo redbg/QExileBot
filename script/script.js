@@ -1,3 +1,3 @@
 function tick() {
-    console.log(game)
+    console.log(game.items)
 }

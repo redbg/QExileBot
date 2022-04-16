@@ -96,7 +96,8 @@ void ExileGame::on_game_readyRead()
                         m_Scene.Refresh();
                         this->SendTileHash(m_Scene.m_TileHash, m_Scene.m_DoodadHash); // <<<<<<<<<< SendTileHash
                         reply->deleteLater();
-                        mgr->deleteLater(); });
+                        mgr->deleteLater();
+                    });
             break;
         }
         case 0x13:
@@ -317,7 +318,8 @@ void ExileGame::on_game_readyRead()
                         // item info
                         QByteArray itemData = this->read(this->read<quint16>());
                         QDataStream itemDataStream(itemData);
-                        Item *item = new Item(itemDataStream, inventoryId, x, y);
+                        Item item(itemDataStream, inventoryId, x, y);
+                        m_Items.append(item.toJson());
                     }
                 }
             }

@@ -12,5 +12,6 @@
         <file>Data/ComponentAttributeRequirements.json</file>
         <file>Data/ArmourTypes.json</file>
         <file>Data/WeaponTypes.json</file>
+        <file>script/script.js</file>
     </qresource>
 </RCC>
