@@ -96,8 +96,7 @@ void ExileGame::on_game_readyRead()
                         m_Scene.Refresh();
                         this->SendTileHash(m_Scene.m_TileHash, m_Scene.m_DoodadHash); // <<<<<<<<<< SendTileHash
                         reply->deleteLater();
-                        mgr->deleteLater();
-                    });
+                        mgr->deleteLater(); });
             break;
         }
         case 0x13:
@@ -368,6 +367,15 @@ void ExileGame::on_game_readyRead()
                     this->read(this->read<quint8>() * 2);
                 }
             }
+            break;
+        }
+        case 0x147:
+        {
+            // 游戏对象消失
+            quint32 id = this->read<quint32>(); // GameObjectId
+            this->read<quint32>();
+            this->read<quint16>();
+            m_Scene.RemoveGameObject(id);
             break;
         }
         case 0x148:

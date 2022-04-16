@@ -88,6 +88,19 @@ public:
         return nullptr;
     }
 
+    void RemoveGameObject(quint32 id)
+    {
+        for (size_t i = 0; i < this->items().size(); i++)
+        {
+            GameObject *obj = dynamic_cast<GameObject *>(this->items().at(i));
+
+            if (obj && obj->m_Id == id)
+            {
+                this->removeItem(obj);
+            }
+        }
+    }
+
     void FindPath(QPointF end)
     {
         QPointF start = GetLocalPlayer()->pos();
