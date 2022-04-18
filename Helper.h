@@ -29,6 +29,9 @@ namespace Helper
         QJsonObject GetComponentAttributeRequirement(QString itemTypeId);
         QJsonObject GetArmourType(quint64 BaseItemTypesKey);
         QJsonObject GetWeaponType(quint64 BaseItemTypesKey);
+        QJsonObject GetBuffDefinitions(quint16 id);
+
+
     };
 
     namespace DataHelper
