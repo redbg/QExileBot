@@ -24,7 +24,8 @@ namespace Helper
 		{
 			QFile file(fileName);
 			bool isOpen = file.open(QFile::ReadOnly);
-			Q_ASSERT(isOpen != false);
+                        qDebug() << fileName;
+                        Q_ASSERT(isOpen != false);
 			return file.readAll();
 		}
 	}

@@ -13,5 +13,6 @@
         <file>Data/ArmourTypes.json</file>
         <file>Data/WeaponTypes.json</file>
         <file>script/script.js</file>
+        <file>Data/BuffDefinitions.json</file>
     </qresource>
 </RCC>

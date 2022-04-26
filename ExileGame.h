@@ -14,6 +14,7 @@
 #include <QTimer>
 #include "Item.h"
 
+
 class ExileGame : public ExileSocket
 {
     Q_OBJECT
@@ -30,6 +31,8 @@ public:
 
     QJSEngine *m_JSEngine;
     QTimer m_Tick;
+
+
 
 public:
     enum MSG_CLIENT : quint16

@@ -1,5 +1,6 @@
 #include "ExileGame.h"
-
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 void ExileGame::connectToGameServer(quint32 Ticket1, quint32 WorldAreaId, quint32 Ticket2, quint16 Port, quint32 Address, QByteArray Key)
 {
     m_Ticket1 = Ticket1;
@@ -84,7 +85,9 @@ void ExileGame::on_game_readyRead()
 
             QNetworkAccessManager *mgr = new QNetworkAccessManager;
             QUrl url(QString("http://127.0.0.1:6112/world?id=%1&seed=%2").arg(m_Scene.m_WorldAreaId).arg(m_Scene.m_Seed));
+
             mgr->get(QNetworkRequest(url));
+
             connect(mgr, &QNetworkAccessManager::finished, this, [=](QNetworkReply *reply)
                     {
                         m_Scene.m_TileHash = reply->rawHeader("TileHash").toUInt();
@@ -541,7 +544,19 @@ void ExileGame::on_game_readyRead()
             quint32 Hash = this->read<quint32>("Hash");                    // GameObjectHashId
             QByteArray ComponentsData = this->read(this->read<quint16>()); // Components Data
 
-            m_Scene.addItem(new GameObject(id, Hash, ComponentsData));
+            QNetworkAccessManager *mgr = new QNetworkAccessManager;
+            QUrl url(QString("http://127.0.0.1:6112/ot?id=%1").arg(Hash));
+
+            connect(mgr, &QNetworkAccessManager::finished, this, [=](QNetworkReply *reply)
+                    {
+
+                m_Scene.addItem(new GameObject(id, Hash, ComponentsData , QJsonDocument::fromJson(reply->readAll()).object()));
+                        reply->deleteLater();
+                        mgr->deleteLater();
+                    });
+
+            mgr->get(QNetworkRequest(url));
+
             break;
         }
         case 0x21f:
